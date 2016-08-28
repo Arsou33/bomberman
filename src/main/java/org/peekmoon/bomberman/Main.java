@@ -11,13 +11,14 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
+import org.peekmoon.bomberman.shader.FragmentShader;
+import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.VertexShader;
 
 public class Main {
     
@@ -71,27 +72,13 @@ public class Main {
         glBindBuffer(GL_ARRAY_BUFFER, vao);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, NULL);
         
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, new String(Files.readAllBytes(Paths.get(getClass().getResource("/shader.vertex").toURI()))));
-        glCompileShader(vertexShader);
-        
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, new String(Files.readAllBytes(Paths.get(getClass().getResource("/shader.fragment").toURI()))));
-        glCompileShader(fragmentShader);
-        
-        
-        int programShader = glCreateProgram();
-        glAttachShader(programShader, vertexShader);
-        glAttachShader(programShader, fragmentShader);
-        glLinkProgram(programShader);
-        
-        
+        ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         
         while (!glfwWindowShouldClose(window)) {
             double time = glfwGetTime();
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glUseProgram(programShader);
+            shader.use();
             glBindVertexArray(vao);
             glDrawArrays(GL_TRIANGLES, 0, 3);
             glfwPollEvents();
