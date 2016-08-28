@@ -1,0 +1,16 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+
+dependencies {
+
+  compile "org.lwjgl:lwjgl:3.0.0"
+  compile "org.lwjgl:lwjgl-platform:3.0.0:natives-windows"
+
+  testCompile "junit:junit:4.11"
+}
