@@ -3,17 +3,25 @@ package org.peekmoon.bomberman.shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import org.peekmoon.bomberman.GLUtils;
+
 public class ProgramShader {
     
     int programShader;
     
-    public ProgramShader(Shader... shaders) {
+    public ProgramShader(VertexShader vs, FragmentShader fs) {
         programShader = glCreateProgram();
         if (programShader == 0) throw new IllegalStateException();
-        for (Shader shader : shaders) {
-            glAttachShader(programShader, shader.getHandle());
-            if (glGetError() != GL_NO_ERROR) throw new IllegalStateException();            
-        }
+        attach(vs, fs);
+        link();
+    }
+
+    public void use() {
+        glUseProgram(programShader);
+        GLUtils.checkError("Unable to use program");
+    }
+
+    private void link() {
         glLinkProgram(programShader);
         if (glGetProgrami(programShader, GL_LINK_STATUS) == GL_FALSE) {
             String msg = glGetProgramInfoLog(programShader);
@@ -21,9 +29,12 @@ public class ProgramShader {
             throw new IllegalStateException("Unable to link program : " + msg);
         };
     }
-    
-    public void use() {
-        glUseProgram(programShader);
+
+    private void attach(VertexShader vs, FragmentShader fs) {
+        for (Shader shader : new Shader[]{vs,fs}) {
+            glAttachShader(programShader, shader.getHandle());
+            if (glGetError() != GL_NO_ERROR) throw new IllegalStateException("Unable to attach " + shader);            
+        }
     }
     
 }

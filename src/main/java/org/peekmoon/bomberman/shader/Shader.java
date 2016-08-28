@@ -10,18 +10,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.lwjgl.opengl.GLUtil;
+import org.peekmoon.bomberman.GLUtils;
+
 public abstract class Shader {
     
-    int shader;
     ShaderType type;
+    String name;
+    int shader;
     
     
     public Shader(ShaderType type, String name) {
         this.type = type;
+        this.name = name;
         shader = glCreateShader(type.getGLType());
         if (shader == 0) throw new IllegalStateException();
         glShaderSource(shader, readSource(name));
-        if (glGetError() != GL_NO_ERROR) throw new IllegalStateException();
+        GLUtils.checkError();
         glCompileShader(shader);
         if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
             String msg = glGetShaderInfoLog(shader);
@@ -54,6 +59,12 @@ public abstract class Shader {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+    
+    
+    @Override
+    public String toString() {
+        return "Shader " + name + " of type " + type;
     }
 
 }
