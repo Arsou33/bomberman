@@ -4,7 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public abstract class Shader {
     
@@ -33,8 +37,21 @@ public abstract class Shader {
     
     private String readSource(String name) {
         try {
-            return new String(Files.readAllBytes(type.getPath(name)));
+            return new String(Files.readAllBytes(getPath(name)));
         } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
+    Path getPath(String name) {
+        try {
+            String resourceName = "/shader/" + name + "." + type.getExt();
+            URL url = getClass().getResource(resourceName);
+            if (url == null) {
+                throw new IllegalArgumentException("Shader " + resourceName + " is not found"); 
+            }
+            return Paths.get(url.toURI());
+        } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
     }

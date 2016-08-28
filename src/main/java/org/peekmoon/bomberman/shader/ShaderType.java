@@ -1,11 +1,7 @@
 package org.peekmoon.bomberman.shader;
 
-import static org.lwjgl.opengl.GL20.*;
-
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 enum ShaderType {
     VERTEX("vert", GL_VERTEX_SHADER),
@@ -19,19 +15,10 @@ enum ShaderType {
         this.glType = glType;
     }
     
-    Path getPath(String name) {
-        try {
-            String resourceName = "/shader/" + name + "." + ext;
-            URL url = getClass().getResource(resourceName);
-            if (url == null) {
-                throw new IllegalArgumentException("Shader " + resourceName + " is not found"); 
-            }
-            return Paths.get(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(e);
-        }
+    public String getExt() {
+        return ext;
     }
-
+    
     public int getGLType() {
         return glType;
     }
