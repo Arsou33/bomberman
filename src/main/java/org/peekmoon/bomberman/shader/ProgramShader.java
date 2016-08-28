@@ -3,6 +3,10 @@ package org.peekmoon.bomberman.shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import org.peekmoon.bomberman.GLUtils;
 
 public class ProgramShader {
@@ -19,6 +23,24 @@ public class ProgramShader {
     public void use() {
         glUseProgram(programShader);
         GLUtils.checkError("Unable to use program");
+    }
+    
+    public void setUniformMatrix4() {
+        // TODO : That's a draft/test better implementation is required
+        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+        int projectionMatrixUniform = glGetUniformLocation(programShader, "projectionMatrix");
+        Matrix4f projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(45.0f), 1.0f, 0.1f, 10.0f);
+        projectionMatrix.get(fb);
+        glUniformMatrix4fv(projectionMatrixUniform, false, fb);
+        
+        
+        Matrix4f viewMatrix = new Matrix4f()
+                   .setLookAt(5.0f, 5.0f, 5.0f,         // Eye
+                              0.0f, 0.0f, 0.0f,          // LookAt
+                              0.0f, 1.0f, 0.0f);         // Up
+        int viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");
+        viewMatrix.get(fb);
+        glUniformMatrix4fv(viewMatrixUniform, false, fb);
     }
 
     private void link() {
