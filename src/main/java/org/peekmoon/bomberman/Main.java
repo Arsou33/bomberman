@@ -56,23 +56,6 @@ public class Main {
         
         Mesh cubeMesh = Mesh.get("cube");
         
-        // TODO : delete buffer
-        int positionVbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, positionVbo);
-        glBufferData(GL_ARRAY_BUFFER, cubeMesh.getPositions(), GL_STATIC_DRAW);
-        
-        // TODO : delete buffer 
-        int vao = glGenVertexArrays();
-        glBindVertexArray(vao);
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vao);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, NULL);
-
-        int indicesVbo = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVbo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, cubeMesh.getIndices(), GL_STATIC_DRAW);
-        
-        
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
         shader.setUniformMatrix4();
@@ -81,9 +64,8 @@ public class Main {
             double time = glfwGetTime();
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glBindVertexArray(vao);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVbo);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+            
+            cubeMesh.draw();
             
             glfwPollEvents();
             glfwSwapBuffers(window);
