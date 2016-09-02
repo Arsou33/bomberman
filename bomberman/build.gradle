@@ -1,11 +1,4 @@
-apply plugin: 'eclipse'
-apply plugin: 'java'
 
-repositories {
-    mavenCentral()
-}
-
-sourceCompatibility = 1.8
 
 dependencies {
 
@@ -14,5 +7,4 @@ dependencies {
 
   compile group: 'org.joml', name: 'joml', version: '1.8.2'
   
-  testCompile "junit:junit:4.11"
 }

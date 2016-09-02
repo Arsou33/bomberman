@@ -12,11 +12,15 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public class AssetBuilder {
+    
+    Logger log = LoggerFactory.getLogger(AssetBuilder.class);
 
     public static void main(String[] args) {
         try {
@@ -28,43 +32,24 @@ public class AssetBuilder {
     }
 
     private void build() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        log.info("Starting asset builder...");
+        log.info("Parsing asset dae input file");
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         XPathFactory xpf = XPathFactory.newInstance();
         XPath path = xpf.newXPath();
-        
         Document xml = builder.parse(getClass().getResourceAsStream("/cube.dae"));
         //Document xml = builder.parse(new File("C:/Users/j.lelong/Downloads/splash-pokedstudio.dae"));
+        
+        log.info("Extracting data from dae input file");
         MeshReader meshReader = new MeshReader((Element) path.evaluate("//geometry[@name='Cube']/mesh", xml, XPathConstants.NODE));
         
+        log.info("Writing mesh asset file");
         FileOutputStream fos = new FileOutputStream("C:/Users/j.lelong/Documents/Perso/dev/bomberman-project/bomberman/src/main/resources/mesh/cube.mesh");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(meshReader.getMesh());
         fos.close();
+        log.info("Finished asset builder");
     }
-
-    /*
-    private void build() throws XMLStreamException, IOException {
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLEventReader reader = factory.createXMLEventReader(getClass().getResourceAsStream("/cube.dae"));
-        while (reader.hasNext()) {
-            XMLEvent event = reader.nextEvent();
-            
-            if (event.isStartElement()) {
-                StartElement startElement = event.asStartElement();
-                if (startElement.getName().getLocalPart().equals("geometry")) {
-                    String name = startElement.getAttributeByName(new QName("name")).getValue();
-                    System.out.println("Start of geometry for " + name);
-                    Mesh mesh = new Mesh();
-                    
-                    FileOutputStream fos = new FileOutputStream("C:/Users/j.lelong/Documents/Perso/dev/bomberman/src/main/resources/mesh/cube.mesh");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(mesh);
-                    fos.close();
-                }
-            }
-        }
-    }
-    */
 
 }

@@ -1,15 +1,5 @@
-apply plugin: 'eclipse'
-apply plugin: 'java'
 
-repositories {
-    mavenCentral()
-}
-
-sourceCompatibility = 1.8
 
 dependencies {
-  
-  compile project(':bomberman')
-  
-  testCompile "junit:junit:4.11"
+    compile project(':bomberman')
 }
