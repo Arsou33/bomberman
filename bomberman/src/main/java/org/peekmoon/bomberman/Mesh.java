@@ -17,14 +17,13 @@ public class Mesh implements Serializable {
     private float[] positions;
     private short[] indices;
     
-    private int indicesVbo;
+    private int positionVbo;
+    private int indiceVbo;
     private int vao;
     
     public static Mesh get(String name) {
         // TODO : Move getResourceAsStream in a resource provider
-        // TODO : Try catch resource
-        try {
-            ObjectInputStream ois = new ObjectInputStream(Mesh.class.getResourceAsStream("/mesh/" + name + ".mesh" ));
+        try (ObjectInputStream ois = new ObjectInputStream(Mesh.class.getResourceAsStream("/mesh/" + name + ".mesh" ))) {
             Mesh mesh = (Mesh) ois.readObject() ;
             mesh.init();
             return mesh;
@@ -34,29 +33,33 @@ public class Mesh implements Serializable {
     }
     
     private void init() {
-        // TODO : delete buffer
-        int positionVbo = glGenBuffers();
+        // Generate position VBO
+        positionVbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, positionVbo);
         glBufferData(GL_ARRAY_BUFFER, positions, GL_STATIC_DRAW);
         
-        // TODO : delete buffer 
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vao);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, NULL);
 
-        indicesVbo = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVbo);
+        // Generate indices VBO
+        indiceVbo = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indiceVbo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
         
         GLUtils.checkError("Unable to init object");
-
+    }
+    
+    public void release() {
+        glDeleteBuffers(positionVbo);
+        glDeleteBuffers(indiceVbo);
     }
     
     public void draw() {
         glBindVertexArray(vao);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesVbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indiceVbo);
         glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_SHORT, 0);
     }
     

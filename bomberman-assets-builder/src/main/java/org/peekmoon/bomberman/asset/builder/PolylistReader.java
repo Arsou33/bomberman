@@ -1,0 +1,47 @@
+package org.peekmoon.bomberman.asset.builder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+public class PolylistReader {
+    
+    private List<InputReader> inputReaders = new ArrayList<>();
+    private List<Short> indices;
+    
+    public PolylistReader(Element element) {
+        inputReaders = new ArrayList<>();
+        
+        NodeList inputNodes = element.getElementsByTagName("input");
+        for(int i = 0 ; i < inputNodes.getLength(); i++) {
+            inputReaders.add(new InputReader((Element) inputNodes.item(i)));
+        }
+        
+        Element pElement = (Element) element.getElementsByTagName("p").item(0);
+        indices = Arrays.stream(pElement.getTextContent().split(" ")).map(Short::parseShort).collect(Collectors.toList());
+        System.out.println("Indices :  " + indices.size());    
+    }
+    
+    public short[] getIndices(String semantic) {
+        int offset = getInputBySemantic(semantic).getOffset();
+        short[] result = new short[indices.size()/inputReaders.size()];
+        for (int i=0; i<result.length; i++) {
+            result[i] = indices.get(i*inputReaders.size()+offset);
+        }
+        return result;
+    }
+    
+    private InputReader getInputBySemantic(String semantic) {
+        for (InputReader input : inputReaders) {
+            if (input.isSemantic(semantic)) {
+                return input;
+            }
+        }
+        throw new IllegalStateException("Unknown semantic : " + semantic);
+    }
+
+}

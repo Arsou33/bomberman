@@ -71,6 +71,8 @@ public class Main {
             glfwSwapBuffers(window);
         }
         
+        cubeMesh.release();
+        
         glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);
         glfwTerminate();
