@@ -12,9 +12,10 @@ import java.io.Serializable;
 
 public class Mesh implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     
     private float[] positions;
+    private float[] textcoords;
     private short[] indices;
     
     private int positionVbo;
@@ -66,6 +67,10 @@ public class Mesh implements Serializable {
     // TODO : Only use by asset builder find better implementation
     public void setIndices(short[] indices) {
         this.indices = indices;
+    }
+    
+    public void setTexCoords(float[] texCoords) {
+        this.textcoords = texCoords;
     }
 
 

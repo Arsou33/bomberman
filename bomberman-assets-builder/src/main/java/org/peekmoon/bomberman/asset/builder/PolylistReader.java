@@ -13,12 +13,12 @@ public class PolylistReader {
     private List<InputReader> inputReaders = new ArrayList<>();
     private List<Short> indices;
     
-    public PolylistReader(Element element) {
+    public PolylistReader(MeshReader meshReader, Element element) {
         inputReaders = new ArrayList<>();
         
         NodeList inputNodes = element.getElementsByTagName("input");
         for(int i = 0 ; i < inputNodes.getLength(); i++) {
-            inputReaders.add(new InputReader((Element) inputNodes.item(i)));
+            inputReaders.add(new InputReader(meshReader, (Element) inputNodes.item(i)));
         }
         
         Element pElement = (Element) element.getElementsByTagName("p").item(0);
@@ -26,6 +26,21 @@ public class PolylistReader {
         System.out.println("Indices :  " + indices.size());    
     }
     
+    
+    public SourceReader getSource(String semantic) {
+        return getInputBySemantic(semantic).getSource();
+    }
+    
+    public boolean has(String semantic) {
+        for (InputReader input : inputReaders) {
+            if (input.isSemantic(semantic)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public short[] getIndices(String semantic) {
         int offset = getInputBySemantic(semantic).getOffset();
         short[] result = new short[indices.size()/inputReaders.size()];

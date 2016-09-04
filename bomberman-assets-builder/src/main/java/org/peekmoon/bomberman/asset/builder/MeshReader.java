@@ -22,35 +22,36 @@ public class MeshReader {
         }
         
         // vertices
-        verticesReader = new VerticesReader((Element)element.getElementsByTagName("vertices").item(0));
+        verticesReader = new VerticesReader(this, (Element)element.getElementsByTagName("vertices").item(0));
         
         // polylist
-        polylistReader = new PolylistReader((Element) element.getElementsByTagName("polylist").item(0));
-        
-        
+        polylistReader = new PolylistReader(this, (Element) element.getElementsByTagName("polylist").item(0));
     }
 
+    public SourceReader getSource(String sourceName) {
+        for (SourceReader source : sourceReaders) {
+            if (source.is(sourceName)) {
+                return source;
+            }
+        }
+        if (verticesReader.is(sourceName)) {
+            return verticesReader.getPositionSource();
+        }
+        throw new IllegalStateException("Unable to find source " + sourceName);
+    }
+    
     public Mesh getMesh() {
+        
+        DataConverter dataConverter = new DataConverter(polylistReader);
+        
         Mesh mesh = new Mesh();
-        mesh.setIndices(polylistReader.getIndices("VERTEX"));
-        mesh.setPositions(getPositions());
+        mesh.setPositions(dataConverter.getPositions());
+        mesh.setTexCoords(dataConverter.getTexCoords());
+        mesh.setIndices(dataConverter.getIndices());
         return mesh;
     }
 
-    private float[] getPositions() {
-        String positionSourceId = verticesReader.getPositionSourceId();
-        for (SourceReader sourceReader : sourceReaders) {
-            if (sourceReader.is(positionSourceId)) {
-                float[] result = new float[sourceReader.getDatas().size()];
-                for (int i = 0; i<result.length; i++) {
-                    result[i] = sourceReader.getDatas().get(i);
-                }
-                return result;
-            }
-        }
-        throw new IllegalStateException();
-    }
-    
+
     
 
 }

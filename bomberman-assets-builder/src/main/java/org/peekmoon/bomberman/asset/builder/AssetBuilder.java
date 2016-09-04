@@ -1,5 +1,6 @@
 package org.peekmoon.bomberman.asset.builder;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -38,11 +39,14 @@ public class AssetBuilder {
         DocumentBuilder builder = factory.newDocumentBuilder();
         XPathFactory xpf = XPathFactory.newInstance();
         XPath path = xpf.newXPath();
-        Document xml = builder.parse(getClass().getResourceAsStream("/cube.dae"));
+        //Document xml = builder.parse(getClass().getResourceAsStream("/cube.dae"));
+        Document xml = builder.parse(new File("C:/Users/j.lelong/Downloads/buggy2.1.dae"));
         //Document xml = builder.parse(new File("C:/Users/j.lelong/Downloads/splash-pokedstudio.dae"));
         
         log.info("Extracting data from dae input file");
-        MeshReader meshReader = new MeshReader((Element) path.evaluate("//geometry[@name='Cube']/mesh", xml, XPathConstants.NODE));
+        //MeshReader meshReader = new MeshReader((Element) path.evaluate("//geometry[@name='Cube']/mesh", xml, XPathConstants.NODE));
+        MeshReader meshReader = new MeshReader((Element) path.evaluate("//geometry[@name='Cylinder.007']/mesh", xml, XPathConstants.NODE));
+        //MeshReader meshReader = new MeshReader((Element) path.evaluate("//geometry[@name='Mesh.006']/mesh", xml, XPathConstants.NODE));
         
         log.info("Writing mesh asset file");
         FileOutputStream fos = new FileOutputStream("C:/Users/j.lelong/Documents/Perso/dev/bomberman-project/bomberman/src/main/resources/mesh/cube.mesh");

@@ -29,13 +29,13 @@ public class ProgramShader {
         // TODO : That's a draft/test better implementation is required
         FloatBuffer fb = BufferUtils.createFloatBuffer(16);
         int projectionMatrixUniform = glGetUniformLocation(programShader, "projectionMatrix");
-        Matrix4f projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(45.0f), 1.0f, 0.1f, 10.0f);
+        Matrix4f projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(45.0f), 1.0f, 0.1f, 100.0f);
         projectionMatrix.get(fb);
         glUniformMatrix4fv(projectionMatrixUniform, false, fb);
         
         
         Matrix4f viewMatrix = new Matrix4f()
-                   .setLookAt(5.0f, 5.0f, 5.0f,         // Eye
+                   .setLookAt(10.0f, 0.0f, 20.0f,        // Eye
                               0.0f, 0.0f, 0.0f,          // LookAt
                               0.0f, 1.0f, 0.0f);         // Up
         int viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");
