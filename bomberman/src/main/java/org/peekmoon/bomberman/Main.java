@@ -53,6 +53,8 @@ public class Main {
         glfwSetKeyCallback(window, keyCallback);
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
         
         Mesh cubeMesh = Mesh.get("cube");
         
