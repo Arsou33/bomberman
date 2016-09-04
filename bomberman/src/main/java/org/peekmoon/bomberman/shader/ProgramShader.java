@@ -35,7 +35,7 @@ public class ProgramShader {
         
         
         Matrix4f viewMatrix = new Matrix4f()
-                   .setLookAt(10.0f, 0.0f, 20.0f,        // Eye
+                   .setLookAt(7.0f, 5.0f, 10.0f,        // Eye
                               0.0f, 0.0f, 0.0f,          // LookAt
                               0.0f, 1.0f, 0.0f);         // Up
         int viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");

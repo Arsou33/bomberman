@@ -45,8 +45,7 @@ public class MeshReader {
         DataConverter dataConverter = new DataConverter(polylistReader);
         
         Mesh mesh = new Mesh();
-        mesh.setPositions(dataConverter.getPositions());
-        mesh.setTexCoords(dataConverter.getTexCoords());
+        mesh.setVertices(dataConverter.getVertices());
         mesh.setIndices(dataConverter.getIndices());
         return mesh;
     }

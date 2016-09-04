@@ -10,8 +10,7 @@ public class DataConverter {
 
     private PolylistReader polylistReader;
     
-    private float[] outPositions;
-    private float[] outTexCoords;
+    private float[] outVertices;
     private short[] outIndices;
     
     public DataConverter(PolylistReader polylistReader) {
@@ -19,12 +18,8 @@ public class DataConverter {
         convert();
     }
     
-    public float[] getPositions() {
-        return outPositions;
-    }
-    
-    public float[] getTexCoords() {
-        return outTexCoords;
+    public float[] getVertices() {
+        return outVertices;
     }
     
     public short[] getIndices() {
@@ -65,29 +60,21 @@ public class DataConverter {
             indices.add((short) indice);
         }
         
-        fillPositions(vertices);
-        if (polylistReader.has("TEXCOORD")) {
-            fillTexCoords(vertices);
-        }
+        fillVertices(vertices);
         fillIndices(indices);
         
     }
 
-    private void fillPositions(List<Vertex> vertices) {
-        outPositions = new float[vertices.size()*3];
+    private void fillVertices(List<Vertex> vertices) {
+        // TODO : Error if TEXCOORD NOT PRESENT
+        outVertices = new float[vertices.size()*5];
         for (int i=0; i<vertices.size(); i++) {
-            outPositions[3*i+0] = vertices.get(i).getPosition().x;
-            outPositions[3*i+1] = vertices.get(i).getPosition().y;
-            outPositions[3*i+2] = vertices.get(i).getPosition().z;
+            outVertices[5*i+0] = vertices.get(i).getPosition().x;
+            outVertices[5*i+1] = vertices.get(i).getPosition().y;
+            outVertices[5*i+2] = vertices.get(i).getPosition().z;
+            outVertices[5*i+3] = vertices.get(i).getTexCoord().x;
+            outVertices[5*i+4] = vertices.get(i).getTexCoord().y;
         }
-    }
-
-    private void fillTexCoords(List<Vertex> vertices) {
-        outTexCoords = new float[vertices.size()*2];
-        for (int i=0; i<vertices.size(); i++) {
-            outTexCoords[2*i+0] = vertices.get(i).getTexCoord().x;
-            outTexCoords[2*i+1] = vertices.get(i).getTexCoord().y;
-        }        
     }
 
     private void fillIndices(List<Short> indices) {

@@ -6,7 +6,8 @@ import static org.lwjgl.opengl.GL11.glGetError;
 public class GLUtils {
     
     public static void checkError(String msg) {
-        if (glGetError() != GL_NO_ERROR) throw new IllegalStateException(msg);
+        int err = glGetError();
+        if (err != GL_NO_ERROR) throw new IllegalStateException("[" + String.format("0x%04X", err) + "] " + msg);
     }
 
     public static void checkError() {
