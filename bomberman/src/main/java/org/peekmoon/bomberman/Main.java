@@ -60,7 +60,7 @@ public class Main {
         
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
-        shader.setUniformMatrix4();
+        Camera camera = new Camera(shader);
         
         while (!glfwWindowShouldClose(window)) {
             double time = glfwGetTime();

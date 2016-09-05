@@ -9,15 +9,20 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.peekmoon.bomberman.GLUtils;
 
-public class ProgramShader {
+public class ProgramShader implements ProjectionView {
     
     int programShader;
+    int viewMatrixUniform;
+    int projectionMatrixUniform;
+    
     
     public ProgramShader(VertexShader vs, FragmentShader fs) {
         programShader = glCreateProgram();
         if (programShader == 0) throw new IllegalStateException();
         attach(vs, fs);
         link();
+        projectionMatrixUniform = glGetUniformLocation(programShader, "projectionMatrix");
+        viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");
     }
 
     public void use() {
@@ -25,22 +30,20 @@ public class ProgramShader {
         GLUtils.checkError("Unable to use program");
     }
     
-    public void setUniformMatrix4() {
-        // TODO : That's a draft/test better implementation is required
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        int projectionMatrixUniform = glGetUniformLocation(programShader, "projectionMatrix");
-        Matrix4f projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(45.0f), 1.0f, 0.1f, 100.0f);
-        projectionMatrix.get(fb);
-        glUniformMatrix4fv(projectionMatrixUniform, false, fb);
-        
-        
-        Matrix4f viewMatrix = new Matrix4f()
-                   .setLookAt(7.0f, 5.0f, 10.0f,        // Eye
-                              0.0f, 0.0f, 0.0f,          // LookAt
-                              0.0f, 1.0f, 0.0f);         // Up
-        int viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");
-        viewMatrix.get(fb);
-        glUniformMatrix4fv(viewMatrixUniform, false, fb);
+    @Override
+    public void setProjection(Matrix4f matrix) {
+        // TODO : Fix viewport is not resized when window is resizing
+        float[] projectionBuffer = new float[16];
+        matrix.get(projectionBuffer);
+        glUniformMatrix4fv(projectionMatrixUniform, false, projectionBuffer);
+    }
+
+    @Override
+    public void setView(Matrix4f matrix) {
+        float[] viewBuffer = new float[16];
+
+        matrix.get(viewBuffer);
+        glUniformMatrix4fv(viewMatrixUniform, false, viewBuffer);
     }
 
     private void link() {
