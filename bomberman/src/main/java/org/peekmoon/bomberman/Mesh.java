@@ -42,21 +42,20 @@ public class Mesh implements Serializable {
         
         GLUtils.checkError("Init start");
         
-        // Generate and bind vertex array
-        vaoId = glGenVertexArrays();
-        glBindVertexArray(vaoId);
-        GLUtils.checkError("Unable to create vertex array");
-        
-        // Generate and bind and fill position VBO
+        // Generate, bind and fill vertex buffer object
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-        GLUtils.checkError("Unable to fill position Buffer");
+        GLUtils.checkError("Unable to fill vertex buffer");
         
+        // Generate and bind vertex array
+        vaoId = glGenVertexArrays();
+        glBindVertexArray(vaoId);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 5*4, 0);
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 5*4, 3*4);
+        GLUtils.checkError("Unable to create vertex array");
         
-        // Unbind buffer and vertex array
+        // Unbind buffer object and vertex array
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         
@@ -73,14 +72,11 @@ public class Mesh implements Serializable {
             BufferedImage image = ImageIO.read(Mesh.class.getResourceAsStream("/mesh/wall.jpg"));
             ByteBuffer imageBuffer = ByteBuffer.allocateDirect(4*image.getHeight()*image.getWidth());
             byte[] imageByteArray = (byte[])image.getRaster().getDataElements(0,0,image.getWidth(),image.getHeight(),null);
-            imageBuffer.clear();
             imageBuffer.put(imageByteArray);
             imageBuffer.rewind();
 
             textureId = glGenTextures();
-            GLUtils.checkError("Unable to generate texture buffer");
             glBindTexture(GL_TEXTURE_2D, textureId);
-            GLUtils.checkError("Unable to bind texture buffer");
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             GLUtils.checkError("Unable parameter texture");
