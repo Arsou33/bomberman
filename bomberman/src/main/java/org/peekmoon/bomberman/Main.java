@@ -11,6 +11,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -56,10 +58,21 @@ public class Main {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         
-        Mesh cubeMesh = Mesh.get("cube");
-        
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
+        
+        
+        Mesh cubeMesh = Mesh.get("cube");
+
+        List<Geometry> geometries = new ArrayList<>();
+        for (int i=-5; i<5; i++) {
+            for (int j=-5; j<5; j++) {
+                Geometry geometry = new Geometry(cubeMesh, shader);
+                geometry.setPosition(i*4, j*4, 0);
+                geometries.add(geometry);
+            }
+        }
+        
         Camera camera = new Camera(shader);
         
         while (!glfwWindowShouldClose(window)) {
@@ -67,7 +80,9 @@ public class Main {
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
-            cubeMesh.draw();
+            for (Geometry geometry : geometries) {
+                geometry.draw();
+            }
             
             glfwPollEvents();
             glfwSwapBuffers(window);

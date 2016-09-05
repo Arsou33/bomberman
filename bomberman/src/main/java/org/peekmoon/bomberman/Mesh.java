@@ -116,7 +116,7 @@ public class Mesh implements Serializable {
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
         
-        GLUtils.checkError("DRAW");
+        GLUtils.checkError("draw");
     }
     
     

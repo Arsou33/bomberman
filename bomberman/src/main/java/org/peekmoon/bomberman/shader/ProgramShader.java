@@ -9,11 +9,12 @@ import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.peekmoon.bomberman.GLUtils;
 
-public class ProgramShader implements ProjectionView {
+public class ProgramShader implements ProjectionViewMatrix, ModelMatrix {
     
     int programShader;
     int viewMatrixUniform;
     int projectionMatrixUniform;
+    int modelMatrixUniform;
     
     
     public ProgramShader(VertexShader vs, FragmentShader fs) {
@@ -23,6 +24,7 @@ public class ProgramShader implements ProjectionView {
         link();
         projectionMatrixUniform = glGetUniformLocation(programShader, "projectionMatrix");
         viewMatrixUniform = glGetUniformLocation(programShader, "viewMatrix");
+        modelMatrixUniform = glGetUniformLocation(programShader, "modelMatrix");
     }
 
     public void use() {
@@ -31,19 +33,25 @@ public class ProgramShader implements ProjectionView {
     }
     
     @Override
-    public void setProjection(Matrix4f matrix) {
+    public void setProjection(Matrix4f projection) {
         // TODO : Fix viewport is not resized when window is resizing
-        float[] projectionBuffer = new float[16];
-        matrix.get(projectionBuffer);
-        glUniformMatrix4fv(projectionMatrixUniform, false, projectionBuffer);
+        setMatrix4fvUniform(projectionMatrixUniform, projection);
     }
 
     @Override
-    public void setView(Matrix4f matrix) {
-        float[] viewBuffer = new float[16];
-
-        matrix.get(viewBuffer);
-        glUniformMatrix4fv(viewMatrixUniform, false, viewBuffer);
+    public void setView(Matrix4f view) {
+        setMatrix4fvUniform(viewMatrixUniform, view);
+    }
+    
+    @Override
+    public void setModelMatrix(Matrix4f model) {
+        setMatrix4fvUniform(modelMatrixUniform, model);
+    }
+    
+    private void setMatrix4fvUniform(int uniform, Matrix4f matrix) {
+        float[] modelBuffer = new float[16];
+        matrix.get(modelBuffer);
+        glUniformMatrix4fv(uniform, false, modelBuffer);        
     }
 
     private void link() {
