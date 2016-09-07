@@ -63,6 +63,8 @@ public class Main {
         
         
         Mesh cubeMesh = Mesh.get("cube");
+        Mesh quadMesh = Mesh.get(new float[] {0,0,0, 0,0, 1,0,0, 11,0, 0,1,0, 0,11, 1,1,0, 11,11 }, new short[] {0,1,2, 1,2,3}, "grass.png");
+        
 
         List<Geometry> geometries = new ArrayList<>();
         for (int i=-5; i<=5; i++) {
@@ -72,6 +74,10 @@ public class Main {
                 geometries.add(geometry);
             }
         }
+        Geometry ground = new Geometry(quadMesh, shader);
+        ground.scale(42);
+        ground.setPosition(-21, -21, 0);
+        geometries.add(ground);
         
         Camera camera = new Camera(shader);
         

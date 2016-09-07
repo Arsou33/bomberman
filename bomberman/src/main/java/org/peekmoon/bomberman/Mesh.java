@@ -17,28 +17,36 @@ import javax.imageio.ImageIO;
 
 public class Mesh implements Serializable {
 
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
     
     private float[] vertices;
     private short[] indices;
     
-    private int vboId;
-    private int iboId;
-    private int vaoId;
-    private int textureId;
+    transient private int vboId;
+    transient private int iboId;
+    transient private int vaoId;
+    transient private int textureId;
     
     public static Mesh get(String name) {
         // TODO : Move getResourceAsStream in a resource provider
         try (ObjectInputStream ois = new ObjectInputStream(Mesh.class.getResourceAsStream("/mesh/" + name + ".mesh" ))) {
             Mesh mesh = (Mesh) ois.readObject() ;
-            mesh.init();
+            mesh.init("wall.jpg"); // TODO : Variabilize
             return mesh;
         } catch (IOException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
     
-    private void init() {
+    public static Mesh get(float[] vertices, short[] indices, String texture) {
+        Mesh mesh = new Mesh();
+        mesh.setVertices(vertices);
+        mesh.setIndices(indices);
+        mesh.init(texture);
+        return mesh;
+    }
+    
+    private void init(String texture) {
         
         GLUtils.checkError("Init start");
         
@@ -69,7 +77,7 @@ public class Mesh implements Serializable {
         //Generate textures
         try {
             // TODO : Use resource provider
-            BufferedImage image = ImageIO.read(Mesh.class.getResourceAsStream("/mesh/wall.jpg"));
+            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/mesh/" + texture));
             ByteBuffer imageBuffer = ByteBuffer.allocateDirect(4*image.getHeight()*image.getWidth());
             byte[] imageByteArray = (byte[])image.getRaster().getDataElements(0,0,image.getWidth(),image.getHeight(),null);
             imageBuffer.put(imageByteArray);

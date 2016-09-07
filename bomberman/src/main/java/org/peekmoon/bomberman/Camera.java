@@ -13,7 +13,7 @@ public class Camera {
         projectionView.setProjection(projection);
         
         Matrix4f view = new Matrix4f()
-                .setLookAt(0.0f, -20.0f, 65.0f,        // Eye
+                .setLookAt(0.0f, -25.0f, 65.0f,        // Eye
                            0.0f, 0.0f, 0.0f,          // LookAt
                            0.0f, 10.0f, 1.0f);         // Up
         projectionView.setView(view);

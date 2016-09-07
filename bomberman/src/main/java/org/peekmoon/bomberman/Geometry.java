@@ -26,4 +26,9 @@ public class Geometry {
         mesh.draw();
     }
 
+    public void scale(float scale) {
+        transformation.scale(scale);
+        
+    }
+
 }
