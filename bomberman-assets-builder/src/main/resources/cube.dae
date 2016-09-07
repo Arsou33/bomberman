@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.77.0 commit date:2016-04-05, commit time:18:12, hash:abf6f08</authoring_tool>
     </contributor>
-    <created>2016-08-30T01:09:48</created>
-    <modified>2016-08-30T01:09:48</modified>
+    <created>2016-09-05T21:26:41</created>
+    <modified>2016-09-05T21:26:41</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -159,7 +159,7 @@
           </technique_common>
         </source>
         <source id="Cube-mesh-map-0">
-          <float_array id="Cube-mesh-map-0-array" count="72">0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1</float_array>
+          <float_array id="Cube-mesh-map-0-array" count="72">0.418815 0.581185 0.5811851 0.418815 0.5811851 0.5811851 0.418815 0.418815 0.5811851 0.5811851 0.418815 0.581185 0.418815 0.418815 0.5811851 0.5811851 0.418815 0.581185 0.418815 0.418815 0.5811851 0.5811851 0.418815 0.581185 0.418815 0.581185 0.5811851 0.418815 0.5811851 0.5811851 0.418815 0.418815 0.5811851 0.5811851 0.418815 0.581185 0.418815 0.581185 0.418815 0.418815 0.5811851 0.418815 0.418815 0.418815 0.5811851 0.418815 0.5811851 0.5811851 0.418815 0.418815 0.5811851 0.418815 0.5811851 0.5811851 0.418815 0.418815 0.5811851 0.418815 0.5811851 0.5811851 0.418815 0.581185 0.418815 0.418815 0.5811851 0.418815 0.418815 0.418815 0.5811851 0.418815 0.5811851 0.5811851</float_array>
           <technique_common>
             <accessor source="#Cube-mesh-map-0-array" count="36" stride="2">
               <param name="S" type="float"/>
@@ -196,9 +196,7 @@
         <instance_geometry url="#Cube-mesh" name="Cube">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material-material" target="#Material-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Material-material" target="#Material-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>

@@ -41,12 +41,12 @@ public class Main {
         }
         
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         
         
-        long window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+        long window = glfwCreateWindow(800, 600, "Simple example", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create the GLFW window");
@@ -65,8 +65,8 @@ public class Main {
         Mesh cubeMesh = Mesh.get("cube");
 
         List<Geometry> geometries = new ArrayList<>();
-        for (int i=-5; i<5; i++) {
-            for (int j=-5; j<5; j++) {
+        for (int i=-5; i<=5; i++) {
+            for (int j=-5; j<=5; j++) {
                 Geometry geometry = new Geometry(cubeMesh, shader);
                 geometry.setPosition(i*4, j*4, 0);
                 geometries.add(geometry);
