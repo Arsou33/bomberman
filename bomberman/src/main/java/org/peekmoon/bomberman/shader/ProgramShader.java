@@ -3,13 +3,11 @@ package org.peekmoon.bomberman.shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 import org.peekmoon.bomberman.GLUtils;
 
-public class ProgramShader implements ProjectionViewMatrix, ModelMatrix {
+public class ProgramShader implements ProgramProjectionView, ModelMatrix {
     
     int programShader;
     int viewMatrixUniform;
@@ -34,7 +32,6 @@ public class ProgramShader implements ProjectionViewMatrix, ModelMatrix {
     
     @Override
     public void setProjection(Matrix4f projection) {
-        // TODO : Fix viewport is not resized when window is resizing
         setMatrix4fvUniform(projectionMatrixUniform, projection);
     }
 

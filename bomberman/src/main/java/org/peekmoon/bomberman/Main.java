@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.peekmoon.bomberman.shader.FragmentShader;
@@ -46,14 +47,17 @@ public class Main {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         
         
-        long window = glfwCreateWindow(800, 600, "Simple example", NULL, NULL);
+        long window = glfwCreateWindow(896, 504, "Simple example", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create the GLFW window");
         }
         
+        glfwSetWindowAspectRatio(window, 16, 9);
+        glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);        
         glfwSetKeyCallback(window, keyCallback);
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -80,9 +84,23 @@ public class Main {
         geometries.add(ground);
         
         Camera camera = new Camera(shader);
+        camera.update(); // We never change projection and view
         
+        double lastTime = glfwGetTime();
+        double timeToStat = 1;
+        int nbFrame = 0;
         while (!glfwWindowShouldClose(window)) {
             double time = glfwGetTime();
+            double delta = time - lastTime;
+            lastTime = time;
+            timeToStat -= delta;
+            nbFrame++;
+            if (timeToStat < 0) {
+                System.out.println("FPS : " + nbFrame);
+                nbFrame = 0;
+                timeToStat=1;
+            }
+            
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
@@ -90,8 +108,8 @@ public class Main {
                 geometry.draw();
             }
             
-            glfwPollEvents();
             glfwSwapBuffers(window);
+            glfwPollEvents();
         }
         
         cubeMesh.release();
@@ -102,12 +120,20 @@ public class Main {
         errorCallback.free();
     }
     
-    private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
+    private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {   
         @Override
         public void invoke(long window, int key, int scancode, int action, int mods) {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
             }
+        }
+    };
+    
+    private GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
+        
+        @Override
+        public void invoke(long window, int width, int height) {
+            glViewport(0, 0, width, height);
         }
     };
 
