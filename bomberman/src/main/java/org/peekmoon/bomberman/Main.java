@@ -55,7 +55,6 @@ public class Main {
         
         glfwSetWindowAspectRatio(window, 16, 9);
         glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);        
-        glfwSetKeyCallback(window, keyCallback);
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
         GL.createCapabilities();
@@ -67,24 +66,38 @@ public class Main {
         
         
         Mesh cubeMesh = Mesh.get("cube");
-        Mesh quadMesh = Mesh.get(new float[] {0,0,0, 0,0, 1,0,0, 11,0, 0,1,0, 0,11, 1,1,0, 11,11 }, new short[] {0,1,2, 1,2,3}, "grass.png");
+        Mesh quadMesh = Mesh.get(new float[] {
+                -0.5f,-0.5f,0, 0,0, 
+                0.5f,-0.5f,0,  1.5f,0,
+                -0.5f,0.5f,0,  0,1.5f, 
+                0.5f,0.5f,0,   1.5f,1.5f }, new short[] {0,1,2, 1,2,3}, "grass.png");
         
 
         List<Geometry> geometries = new ArrayList<>();
-        for (int i=-5; i<=5; i++) {
-            for (int j=-5; j<=5; j++) {
+        
+        // Add ground geometries
+        int nbTilesWidth = 24;
+        int nbTilesHeight = 18;
+        
+        for (int i=0; i<nbTilesWidth; i++) {
+            for (int j=0; j<nbTilesHeight; j++) {
+                Geometry ground = new Geometry(quadMesh, shader);
+                ground.setPosition(i, j, 0);
+                geometries.add(ground);
+            }
+        }
+        
+        for (int i=0; i<nbTilesWidth; i+=2) {
+            for (int j=0; j<nbTilesHeight; j+=2) {
                 Geometry geometry = new Geometry(cubeMesh, shader);
-                geometry.setPosition(i*4, j*4, 0);
+                geometry.setPosition(i, j, -0.2f);
                 geometries.add(geometry);
             }
         }
-        Geometry ground = new Geometry(quadMesh, shader);
-        ground.scale(42);
-        ground.setPosition(-21, -21, 0);
-        geometries.add(ground);
-        
+
         Camera camera = new Camera(shader);
-        camera.update(); // We never change projection and view
+        KeyManager keyManager = new KeyManager(window, camera);
+        glfwSetKeyCallback(window, keyManager);
         
         double lastTime = glfwGetTime();
         double timeToStat = 1;
@@ -103,6 +116,9 @@ public class Main {
             
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            camera.update();
+            keyManager.update();
             
             for (Geometry geometry : geometries) {
                 geometry.draw();
@@ -120,14 +136,6 @@ public class Main {
         errorCallback.free();
     }
     
-    private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {   
-        @Override
-        public void invoke(long window, int key, int scancode, int action, int mods) {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                glfwSetWindowShouldClose(window, true);
-            }
-        }
-    };
     
     private GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
         

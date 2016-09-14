@@ -48,7 +48,7 @@ public class Mesh implements Serializable {
     
     private void init(String texture) {
         
-        GLUtils.checkError("Init start");
+        GLUtils.checkError("Init start failed");
         
         // Generate, bind and fill vertex buffer object
         vboId = glGenBuffers();
