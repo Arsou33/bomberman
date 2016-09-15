@@ -6,18 +6,13 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.nio.ByteBuffer;
-
-import javax.imageio.ImageIO;
-
 
 public class Mesh implements Serializable {
 
-    private static final long serialVersionUID = 4L;
+    private static final long serialVersionUID = 5L;
     
     private float[] vertices;
     private short[] indices;
@@ -25,20 +20,20 @@ public class Mesh implements Serializable {
     transient private int vboId;
     transient private int iboId;
     transient private int vaoId;
-    transient private int textureId;
+    transient private Texture texture;
     
-    public static Mesh get(String name) {
+    public static Mesh get(String name, Texture texture) {
         // TODO : Move getResourceAsStream in a resource provider
         try (ObjectInputStream ois = new ObjectInputStream(Mesh.class.getResourceAsStream("/mesh/" + name + ".mesh" ))) {
             Mesh mesh = (Mesh) ois.readObject() ;
-            mesh.init("wall.jpg"); // TODO : Variabilize
+            mesh.init(texture);
             return mesh;
         } catch (IOException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }
     
-    public static Mesh get(float[] vertices, short[] indices, String texture) {
+    public static Mesh get(float[] vertices, short[] indices, Texture texture) {
         Mesh mesh = new Mesh();
         mesh.setVertices(vertices);
         mesh.setIndices(indices);
@@ -46,7 +41,8 @@ public class Mesh implements Serializable {
         return mesh;
     }
     
-    private void init(String texture) {
+    private void init(Texture texture) {
+        this.texture = texture;
         
         GLUtils.checkError("Init start failed");
         
@@ -74,40 +70,19 @@ public class Mesh implements Serializable {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         GLUtils.checkError("Unable to generate indice BO");
 
-        //Generate textures
-        try {
-            // TODO : Use resource provider
-            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/mesh/" + texture));
-            ByteBuffer imageBuffer = ByteBuffer.allocateDirect(4*image.getHeight()*image.getWidth());
-            byte[] imageByteArray = (byte[])image.getRaster().getDataElements(0,0,image.getWidth(),image.getHeight(),null);
-            imageBuffer.put(imageByteArray);
-            imageBuffer.rewind();
 
-            textureId = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            GLUtils.checkError("Unable parameter texture");
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.getWidth(), image.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, imageBuffer);
-            GLUtils.checkError("Unable transfer texture to GPU");
-        
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        
         GLUtils.checkError("Unable to init object");
     }
     
     public void release() {
         glDeleteBuffers(vboId);
         glDeleteBuffers(iboId);
-        glDeleteTextures(textureId);
     }
     
     public void draw() {
         // Texture
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
         
         // Vertex array
         glBindVertexArray(vaoId);

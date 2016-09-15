@@ -17,7 +17,6 @@ import java.util.List;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.peekmoon.bomberman.shader.FragmentShader;
 import org.peekmoon.bomberman.shader.ProgramShader;
@@ -64,16 +63,24 @@ public class Main {
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
         
+        Texture wallTexture = new Texture("wall.png");
+        Texture grassTexture = new Texture("grass.png");
+        Texture cowboyTexture = new Texture("cowboy.png");
+        Texture testTexture = new Texture("test.png");
+        Mesh cubeMesh = Mesh.get("cube", wallTexture);
+        Mesh cowboyMesh = Mesh.get("cowboy", cowboyTexture);
         
-        Mesh cubeMesh = Mesh.get("cube");
         Mesh quadMesh = Mesh.get(new float[] {
-                -0.5f,-0.5f,0, 0,0, 
-                0.5f,-0.5f,0,  1.5f,0,
-                -0.5f,0.5f,0,  0,1.5f, 
-                0.5f,0.5f,0,   1.5f,1.5f }, new short[] {0,1,2, 1,2,3}, "grass.png");
+                -0.5f,-0.5f,0, 0,1, 
+                0.5f,-0.5f,0,  1,1,
+                -0.5f,0.5f,0,  0,0, 
+                0.5f,0.5f,0,   1,0 }, new short[] {0,1,2, 1,2,3}, grassTexture);
         
-
         List<Geometry> geometries = new ArrayList<>();
+        
+        Geometry cowboy = new Geometry(cowboyMesh, shader);
+        cowboy.setPosition(7, 5, 0);
+        geometries.add(cowboy);
         
         // Add ground geometries
         int nbTilesWidth = 24;
@@ -129,11 +136,15 @@ public class Main {
         }
         
         cubeMesh.release();
-        
+        wallTexture.release();
+        grassTexture.release();
+        testTexture.release();
+        cowboyTexture.release();
         glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);
         glfwTerminate();
-        errorCallback.free();
+        errorCallback.free();        
+
     }
     
     

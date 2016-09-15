@@ -73,7 +73,7 @@ public class DataConverter {
             outVertices[5*i+1] = vertices.get(i).getPosition().y;
             outVertices[5*i+2] = vertices.get(i).getPosition().z;
             outVertices[5*i+3] = vertices.get(i).getTexCoord().x;
-            outVertices[5*i+4] = vertices.get(i).getTexCoord().y;
+            outVertices[5*i+4] = 1 - vertices.get(i).getTexCoord().y; // Revert v as blender and opengl use different coordinate system
         }
     }
 

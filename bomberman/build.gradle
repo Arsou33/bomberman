@@ -4,6 +4,8 @@ dependencies {
 
   compile "org.lwjgl:lwjgl:3.0.0"
   compile "org.lwjgl:lwjgl-platform:3.0.0:natives-windows"
+  compile group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
+  
 
   compile group: 'org.joml', name: 'joml', version: '1.8.2'
   
