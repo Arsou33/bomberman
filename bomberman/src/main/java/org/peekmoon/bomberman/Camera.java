@@ -15,12 +15,15 @@ public class Camera {
     private Matrix4f view;
     
     public Camera(ProgramProjectionView programProjectionView) {
-        
+        float ratio = 16.0f/9.0f;
+        float zoom = 10.0f;
+
         this.programProjectionView = programProjectionView;
-        projection = new Matrix4f().perspective((float) Math.toRadians(75.0f), 16.0f/9.0f, 1f, 100.0f);
+        //projection = new Matrix4f().perspective((float) Math.toRadians(75.0f), ratio, 1f, 100.0f);
+        projection = new Matrix4f().ortho(-zoom, zoom, -zoom/ratio, zoom/ratio, -10, 100);
         
-        this.position = new Vector3f(12.0f, 2.0f, 5.0f);
-        this.lookAt = new Vector3f(12.0f, 5.0f, 0.0f);
+        this.position = new Vector3f(10.0f, 1.0f, 7.0f);
+        this.lookAt = new Vector3f(10.0f, 7.0f, 0.0f);
         this.up = new Vector3f(0.0f, 1.0f, 1.0f);
 
         view = new Matrix4f();

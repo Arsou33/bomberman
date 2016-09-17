@@ -31,4 +31,8 @@ public class Geometry {
         
     }
 
+    public void translate(float x, float y, float z) {
+        transformation.translate(x,y,z);
+    }
+
 }

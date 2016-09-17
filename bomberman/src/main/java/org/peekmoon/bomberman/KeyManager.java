@@ -72,17 +72,19 @@ public class KeyManager extends GLFWKeyCallback {
         
     }
     
-    public KeyManager(long window, Camera camera) {
+    public KeyManager(long window, Player player, Camera camera) {
         this.window = window;
         addKeyAction(GLFW_KEY_ESCAPE, () -> glfwSetWindowShouldClose(window, true));
         
-        addKeyAction(GLFW_KEY_UP, () -> camera.translate(0,speed,0));
-        addKeyAction(GLFW_KEY_DOWN, () -> camera.translate(0, -speed, 0));
-        addKeyAction(GLFW_KEY_LEFT, () -> camera.translate(-speed, 0, 0));
-        addKeyAction(GLFW_KEY_RIGHT, () -> camera.translate(speed, 0, 0));
+        // Camera movement
+        
+        addKeyAction(GLFW_KEY_UP, () -> camera.translate(0,speed,0), KeyMod.CONTROL);
+        addKeyAction(GLFW_KEY_DOWN, () -> camera.translate(0, -speed, 0), KeyMod.CONTROL);
+        addKeyAction(GLFW_KEY_LEFT, () -> camera.translate(-speed, 0, 0), KeyMod.CONTROL);
+        addKeyAction(GLFW_KEY_RIGHT, () -> camera.translate(speed, 0, 0), KeyMod.CONTROL);
 
-        addKeyAction(GLFW_KEY_PAGE_UP, () -> camera.translate(0,0,speed));
-        addKeyAction(GLFW_KEY_PAGE_DOWN, () -> camera.translate(0,0,-speed));
+        addKeyAction(GLFW_KEY_PAGE_UP, () -> camera.translate(0,0,speed), KeyMod.CONTROL);
+        addKeyAction(GLFW_KEY_PAGE_DOWN, () -> camera.translate(0,0,-speed), KeyMod.CONTROL);
 
         
         addKeyAction(GLFW_KEY_UP, () -> camera.targetTranslate(0,speed,0), KeyMod.SHIFT);
@@ -92,12 +94,20 @@ public class KeyManager extends GLFWKeyCallback {
 
         addKeyAction(GLFW_KEY_PAGE_UP, () -> camera.targetTranslate(0,0,speed), KeyMod.SHIFT);
         addKeyAction(GLFW_KEY_PAGE_DOWN, () -> camera.targetTranslate(0,0,-speed), KeyMod.SHIFT);
+        
+        
+        // Player movement
+
+        addKeyAction(GLFW_KEY_UP, () -> player.moveUp());
+        addKeyAction(GLFW_KEY_DOWN, () -> player.moveDown());
+        addKeyAction(GLFW_KEY_LEFT, () -> player.moveLeft());
+        addKeyAction(GLFW_KEY_RIGHT, () -> player.moveRight());
+    
     }
 
 
     private void addKeyAction(int key, Runnable action, KeyMod... mods) {
         keyStateActions.add(new KeyStateAction(key, action, mods));
-        
     }
 
     @Override

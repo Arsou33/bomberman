@@ -1,6 +1,5 @@
 package org.peekmoon.bomberman.asset.builder;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -32,7 +31,7 @@ public class AssetBuilder {
         
     }
     
-    private String[] meshNames = new String[] {"cube", "cowboy" };
+    private String[] meshNames = new String[] {"cube", "wood-box", "cowboy" };
     
     private void build() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         log.info("Starting asset builder...");

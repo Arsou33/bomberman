@@ -51,7 +51,7 @@ public class Main {
         board = new Board(shader);
         player = new Player(shader);
         camera = new Camera(shader);
-        KeyManager keyManager = new KeyManager(window, camera);
+        KeyManager keyManager = new KeyManager(window, player, camera);
         glfwSetKeyCallback(window, keyManager);
         
         double lastTime = glfwGetTime();
@@ -109,7 +109,7 @@ public class Main {
         glfwSetWindowAspectRatio(window, 16, 9);
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
+        //glfwSwapInterval(1);
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);

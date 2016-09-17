@@ -14,9 +14,7 @@ public class Texture {
     private int id;
     
     public Texture(String texture) {
-        try {
-            InputStream in = getClass().getResourceAsStream("/texture/" + texture);
-            try {
+        try (InputStream in = getClass().getResourceAsStream("/texture/" + texture)) {
                PNGDecoder decoder = new PNGDecoder(in);
                ByteBuffer buf = ByteBuffer.allocateDirect(4*decoder.getWidth()*decoder.getHeight());
                decoder.decode(buf, decoder.getWidth()*4, Format.RGBA);
@@ -28,11 +26,6 @@ public class Texture {
                GLUtils.checkError("Unable parameter texture");
                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buf);
                GLUtils.checkError("Unable transfer texture to GPU");
-               
-            } finally {
-               in.close();
-            }            
-        
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
