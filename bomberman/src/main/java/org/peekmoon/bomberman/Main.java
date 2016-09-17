@@ -29,80 +29,28 @@ public class Main {
 		System.out.println("Bomberman starting...");
 		new Main().start();
 		System.out.println("Bomberman finished...");
-		
 	}
+	
+	private long window;
+	private GLFWErrorCallback errorCallback;
+	
+    private Board board;
+    private Player player;
+    private Camera camera;
+    
+    private Texture testTexture;
 
     private void start() throws IOException, URISyntaxException {
-        GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
-        glfwSetErrorCallback(errorCallback);
-        
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
-        
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        
-        
-        long window = glfwCreateWindow(896, 504, "Simple example", NULL, NULL);
-        if (window == NULL) {
-            glfwTerminate();
-            throw new RuntimeException("Failed to create the GLFW window");
-        }
-        
-        glfwSetWindowAspectRatio(window, 16, 9);
-        glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);        
-        glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
-        GL.createCapabilities();
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
+        initOpenGlWindow();
         
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
         
-        Texture wallTexture = new Texture("wall.png");
-        Texture grassTexture = new Texture("grass.png");
-        Texture cowboyTexture = new Texture("cowboy.png");
-        Texture testTexture = new Texture("test.png");
-        Mesh cubeMesh = Mesh.get("cube", wallTexture);
-        Mesh cowboyMesh = Mesh.get("cowboy", cowboyTexture);
+        testTexture = new Texture("test.png");
         
-        Mesh quadMesh = Mesh.get(new float[] {
-                -0.5f,-0.5f,0, 0,1, 
-                0.5f,-0.5f,0,  1,1,
-                -0.5f,0.5f,0,  0,0, 
-                0.5f,0.5f,0,   1,0 }, new short[] {0,1,2, 1,2,3}, grassTexture);
-        
-        List<Geometry> geometries = new ArrayList<>();
-        
-        Geometry cowboy = new Geometry(cowboyMesh, shader);
-        cowboy.setPosition(7, 5, 0);
-        geometries.add(cowboy);
-        
-        // Add ground geometries
-        int nbTilesWidth = 24;
-        int nbTilesHeight = 18;
-        
-        for (int i=0; i<nbTilesWidth; i++) {
-            for (int j=0; j<nbTilesHeight; j++) {
-                Geometry ground = new Geometry(quadMesh, shader);
-                ground.setPosition(i, j, 0);
-                geometries.add(ground);
-            }
-        }
-        
-        for (int i=0; i<nbTilesWidth; i+=2) {
-            for (int j=0; j<nbTilesHeight; j+=2) {
-                Geometry geometry = new Geometry(cubeMesh, shader);
-                geometry.setPosition(i, j, -0.2f);
-                geometries.add(geometry);
-            }
-        }
-
-        Camera camera = new Camera(shader);
+        board = new Board(shader);
+        player = new Player(shader);
+        camera = new Camera(shader);
         KeyManager keyManager = new KeyManager(window, camera);
         glfwSetKeyCallback(window, keyManager);
         
@@ -127,33 +75,54 @@ public class Main {
             camera.update();
             keyManager.update();
             
-            for (Geometry geometry : geometries) {
-                geometry.draw();
-            }
-            
+            board.render();
+            player.render();
+
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
         
-        cubeMesh.release();
-        wallTexture.release();
-        grassTexture.release();
+        release();        
+
+    }
+
+    private void initOpenGlWindow() {
+        errorCallback = GLFWErrorCallback.createPrint(System.err);
+        glfwSetErrorCallback(errorCallback);
+        
+        if (!glfwInit()) {
+            throw new IllegalStateException("Unable to initialize GLFW");
+        }
+        
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        
+        
+        window = glfwCreateWindow(896, 504, "Simple example", NULL, NULL);
+        if (window == NULL) {
+            glfwTerminate();
+            throw new RuntimeException("Failed to create the GLFW window");
+        }
+        
+        glfwSetWindowAspectRatio(window, 16, 9);
+        glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
+        glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
+        GL.createCapabilities();
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+    }
+
+    private void release() {
+        board.release();
+        player.release();
         testTexture.release();
-        cowboyTexture.release();
         glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);
         glfwTerminate();
-        errorCallback.free();        
-
+        errorCallback.free();
     }
     
-    
-    private GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
-        
-        @Override
-        public void invoke(long window, int width, int height) {
-            glViewport(0, 0, width, height);
-        }
-    };
-
 }

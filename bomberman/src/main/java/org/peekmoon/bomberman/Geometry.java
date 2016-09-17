@@ -21,7 +21,7 @@ public class Geometry {
         transformation.setTranslation(x, y, z);
     }
     
-    public void draw() {
+    public void render() {
         modelMatrix.setModelMatrix(transformation);
         mesh.draw();
     }
