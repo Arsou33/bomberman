@@ -1,9 +1,12 @@
-package org.peekmoon.bomberman;
+package org.peekmoon.bomberman.board;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.peekmoon.bomberman.Geometry;
+import org.peekmoon.bomberman.Mesh;
+import org.peekmoon.bomberman.Texture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class Board {
@@ -12,28 +15,28 @@ public class Board {
     private final static int nbTilesWidth = 21;
     private final static int nbTilesHeight = 15;
     
+    
+    private final Tile[][] tiles;
+    
     private final List<Geometry> geometries;
     private final ProgramShader shader;
     
     private final Mesh groundMesh;
-    private final Mesh woodBoxMesh;
-    private final Mesh brickBoxMesh;
-    
     private final Texture grassTexture;
-    private final Texture brickTexture;
-    private final Texture woodTexture;
 
     
     
     public Board(ProgramShader shader) {
+        this.tiles = new Tile[nbTilesWidth][nbTilesHeight];
+        for (int i=0; i<nbTilesWidth; i++) {
+            for (int j=0; j<nbTilesHeight; j++) {
+               tiles[i][j] = new Tile(this,i,j); 
+            }
+        }
+        
         this.shader = shader;
         this.geometries = new ArrayList<>();
-        this.brickTexture = new Texture("brick.png");
-        this.woodTexture = new Texture("wood-box.png");
         this.grassTexture = new Texture("grass.png");
-        
-        woodBoxMesh = Mesh.get("cube", woodTexture);
-        brickBoxMesh = Mesh.get("cube", brickTexture);
         
         groundMesh = Mesh.get(new float[] {
                 -0.5f,-0.5f,0, 0,1, 
@@ -55,13 +58,9 @@ public class Board {
         for (int i=0; i<nbTilesWidth; i++) {
             for (int j=0; j<nbTilesHeight; j++) {
                 if (i==0 || j==0 || i==nbTilesWidth-1 || j==nbTilesHeight-1 || (i%2==0 && j%2==0)) {
-                    Geometry geometry = new Geometry(brickBoxMesh, shader);
-                    geometry.setPosition(i, j, 0);
-                    geometries.add(geometry);
+                    tiles[i][j].addItem(new BrickBoxItem(shader, i, j));
                 } else if (distance(1,1, i,j)>4 && distance(nbTilesWidth-2, nbTilesHeight-2, i,j)>4 && rand.nextInt(10)<8) {
-                    Geometry geometry = new Geometry(woodBoxMesh, shader);
-                    geometry.setPosition(i, j, 0);
-                    geometries.add(geometry);
+                    tiles[i][j].addItem(new WoodBoxItem(shader, i, j));
                 }
             }
         }
@@ -76,14 +75,26 @@ public class Board {
         for (Geometry geometry : geometries) {
             geometry.render();
         }
+        for (int i=0; i<nbTilesWidth; i++) {
+            for (int j=0; j<nbTilesHeight; j++) {
+                tiles[i][j].render();
+            }
+        }
     }
     
     public void release() {
-        woodBoxMesh.release();
-        brickBoxMesh.release();
+        // TODO : release woodboxitem and brickboxitem
         groundMesh.release();
-        brickTexture.release();
         grassTexture.release();
+    }
+
+    public Tile get(float posX, float posY) {
+        return get(Math.round(posX), Math.round(posY));
+    }
+    
+    
+    public Tile get(int i, int j) {
+        return tiles[i][j];
     }
 
 }

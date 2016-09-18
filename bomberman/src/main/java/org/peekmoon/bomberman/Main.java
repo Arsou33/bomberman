@@ -18,6 +18,9 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
+import org.peekmoon.bomberman.board.Board;
+import org.peekmoon.bomberman.board.Player;
+import org.peekmoon.bomberman.key.KeyManager;
 import org.peekmoon.bomberman.shader.FragmentShader;
 import org.peekmoon.bomberman.shader.ProgramShader;
 import org.peekmoon.bomberman.shader.VertexShader;
@@ -49,7 +52,7 @@ public class Main {
         testTexture = new Texture("test.png");
         
         board = new Board(shader);
-        player = new Player(shader);
+        player = new Player(board, shader);
         camera = new Camera(shader);
         KeyManager keyManager = new KeyManager(window, player, camera);
         glfwSetKeyCallback(window, keyManager);
@@ -59,9 +62,9 @@ public class Main {
         int nbFrame = 0;
         while (!glfwWindowShouldClose(window)) {
             double time = glfwGetTime();
-            double delta = time - lastTime;
+            double elapsed = time - lastTime;
             lastTime = time;
-            timeToStat -= delta;
+            timeToStat -= elapsed;
             nbFrame++;
             if (timeToStat < 0) {
                 System.out.println("FPS : " + nbFrame);
@@ -73,7 +76,7 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.update();
-            keyManager.update();
+            keyManager.update((float)elapsed);
             
             board.render();
             player.render();
