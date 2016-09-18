@@ -38,32 +38,71 @@ public class Player {
     }
 
     public void moveUp(float elapsed) {
-        float distToMove = elapsed * speed;
-        float distToAlign = Math.round(posX) - posX;
-        if (distToAlign<0) {
-            moveLeft(elapsed);
-            return;
-        } else if (distToAlign>0) {
-            moveRight(elapsed);
-            return;
-        } else {
-            if (board.get(posX, posY).get(Direction.UP).isTraversable()) {
-                posY+=distToMove;
-            }
-        }
+        Tile destTile = board.get(posX, (float)Math.floor(posY)).get(Direction.UP);
+        if (!destTile.isTraversable()) return;
         
+        float distToMove = elapsed * speed;
+        float deltaToAlign = Math.round(posX) - posX;
+
+        if (Math.abs(deltaToAlign) < distToMove) {
+            posX = Math.round(posX);
+            distToMove -= Math.abs(deltaToAlign);
+        } else {
+            posX += distToMove * Math.signum(deltaToAlign);
+            return;
+        }
+        posY+=distToMove;
     }
 
     public void moveDown(float elapsed) {
-        if (posY-elapsed>1) posY -= elapsed;
+        Tile destTile = board.get(posX, (float)Math.ceil(posY)).get(Direction.DOWN);
+        if (!destTile.isTraversable()) return;
+        
+        float distToMove = elapsed * speed;
+        float deltaToAlign = Math.round(posX) - posX;
+
+        if (Math.abs(deltaToAlign) < distToMove) {
+            posX = Math.round(posX);
+            distToMove -= Math.abs(deltaToAlign);
+        } else {
+            posX += distToMove * Math.signum(deltaToAlign);
+            return;
+        }
+        posY-=distToMove;
     }
 
     public void moveLeft(float elapsed) {
-        if (posX-elapsed>1) posX -= elapsed;
+        Tile destTile = board.get((float)Math.ceil(posX), posY).get(Direction.LEFT);
+        if (!destTile.isTraversable()) return;
+        
+        float distToMove = elapsed * speed;
+        float deltaToAlign = Math.round(posY) - posY;
+
+        if (Math.abs(deltaToAlign) < distToMove) {
+            posY = Math.round(posY);
+            distToMove -= Math.abs(deltaToAlign);
+        } else {
+            posY += distToMove * Math.signum(deltaToAlign);
+            return;
+        }
+        posX-=distToMove;
     }
 
     public void moveRight(float elapsed) {
-        if (posX-elapsed<5) posX += elapsed;
+        Tile destTile = board.get((float)Math.floor(posX), posY).get(Direction.RIGHT);
+        if (!destTile.isTraversable()) return;
+        
+        float distToMove = elapsed * speed;
+        float deltaToAlign = Math.round(posY) - posY;
+
+        if (Math.abs(deltaToAlign) < distToMove) {
+            posY = Math.round(posY);
+            distToMove -= Math.abs(deltaToAlign);
+        } else {
+            posY += distToMove * Math.signum(deltaToAlign);
+            return;
+        }
+        posX+=distToMove;
     }
 
 }

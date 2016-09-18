@@ -56,6 +56,7 @@ public class KeyManager extends GLFWKeyCallback {
 
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
+        if (action == GLFW_REPEAT) return;
         System.out.println("Invoke Key : " + key + " scancode : " + scancode + " action : " + action + " mods : " + mods);
     }
     

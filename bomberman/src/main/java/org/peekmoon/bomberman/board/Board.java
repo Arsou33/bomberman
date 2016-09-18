@@ -59,7 +59,7 @@ public class Board {
             for (int j=0; j<nbTilesHeight; j++) {
                 if (i==0 || j==0 || i==nbTilesWidth-1 || j==nbTilesHeight-1 || (i%2==0 && j%2==0)) {
                     tiles[i][j].addItem(new BrickBoxItem(shader, i, j));
-                } else if (distance(1,1, i,j)>4 && distance(nbTilesWidth-2, nbTilesHeight-2, i,j)>4 && rand.nextInt(10)<8) {
+                } else if (distance(1,1, i,j)>4 && distance(nbTilesWidth-2, nbTilesHeight-2, i,j)>4 && rand.nextInt(10)<3) {
                     tiles[i][j].addItem(new WoodBoxItem(shader, i, j));
                 }
             }
