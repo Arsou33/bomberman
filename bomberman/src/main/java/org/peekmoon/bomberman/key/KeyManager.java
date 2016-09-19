@@ -13,11 +13,13 @@ public class KeyManager extends GLFWKeyCallback {
     
     private final float speed = 0.05f;
     private final long window;
+    private final Player player;
     private final List<KeyStateAction> keyStateActions = new ArrayList<>();
     
     
     public KeyManager(long window, Player player, Camera camera) {
         this.window = window;
+        this.player = player;
         addKeyAction(GLFW_KEY_ESCAPE, elapsed -> glfwSetWindowShouldClose(window, true));
         
         // Camera movement
@@ -41,7 +43,6 @@ public class KeyManager extends GLFWKeyCallback {
         
         
         // Player movement
-
         addKeyAction(GLFW_KEY_UP, elapsed -> player.moveUp(elapsed));
         addKeyAction(GLFW_KEY_DOWN, elapsed -> player.moveDown(elapsed));
         addKeyAction(GLFW_KEY_LEFT, elapsed -> player.moveLeft(elapsed));
@@ -58,6 +59,12 @@ public class KeyManager extends GLFWKeyCallback {
     public void invoke(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_REPEAT) return;
         System.out.println("Invoke Key : " + key + " scancode : " + scancode + " action : " + action + " mods : " + mods);
+        
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+            player.dropBomb();
+        }
+        
+        
     }
     
     public void update(float elapsed) {

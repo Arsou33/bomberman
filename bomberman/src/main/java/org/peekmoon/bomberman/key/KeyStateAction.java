@@ -16,7 +16,6 @@ public class KeyStateAction {
         this.key = key;
         this.mods = mods;
         this.action = action;
-        
     }
     
     public void update(float elapsed) {

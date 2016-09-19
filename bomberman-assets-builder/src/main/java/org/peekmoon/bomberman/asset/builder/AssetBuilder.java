@@ -31,7 +31,7 @@ public class AssetBuilder {
         
     }
     
-    private String[] meshNames = new String[] {"cube", "wood-box", "cowboy" };
+    private String[] meshNames = new String[] {"cube", "wood-box", "cowboy", "bomb" };
     
     private void build() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         log.info("Starting asset builder...");

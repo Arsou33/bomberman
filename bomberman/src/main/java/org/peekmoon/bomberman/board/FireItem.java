@@ -5,28 +5,31 @@ import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class BrickBoxItem extends Item {
+public class FireItem extends Item {
     
-    private static final Texture brickTexture = new Texture("brick.png");
-    private static final Mesh brickBoxMesh = Mesh.get("cube", brickTexture);
+    private static final float lifeTime = 1.5f;
+    
+    private static final Texture fireTexture = new Texture("test.png");
+    private static final Mesh fireMesh = Mesh.get("cube", fireTexture);
 
     private final Geometry geometry; 
+    private float countdown;
     
-    
-    public BrickBoxItem(Board board, ProgramShader shader, int i, int j) {
+    public FireItem(Board board, ProgramShader shader, int i, int j) {
         super(shader, board, i, j);
-        geometry = new Geometry(brickBoxMesh, shader);
+        this.countdown = lifeTime;
+        geometry = new Geometry(fireMesh, shader);
         geometry.setPosition(i, j, 0);
     }
 
     @Override
     public boolean isTraversable() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isPropagateFire() {
-        return false;
+        return true;
     }
 
     @Override
@@ -36,19 +39,24 @@ public class BrickBoxItem extends Item {
 
     @Override
     public void release() {
-        brickBoxMesh.release();
-        brickTexture.release();
+        fireMesh.release();
+        fireTexture.release();
+        
     }
 
     @Override
     public boolean update(float elapsed) {
-        return false; 
+        countdown -= elapsed;
+        if (countdown <= 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean fire() {
         return false;
     }
-    
 
 }

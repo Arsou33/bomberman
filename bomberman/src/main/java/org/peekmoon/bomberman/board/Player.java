@@ -14,12 +14,15 @@ public class Player {
     private final Mesh cowboyMesh;
     private final Texture cowboyTexture;
     
+    private final ProgramShader shader;
+    
     private float posX;
     private float posY;
 
     
     public Player(Board board, ProgramShader shader) {
         this.board = board;
+        this.shader = shader;
         cowboyTexture = new Texture("cowboy.png");
         cowboyMesh = Mesh.get("cowboy", cowboyTexture);
         geometry = new Geometry(cowboyMesh, shader);
@@ -38,8 +41,10 @@ public class Player {
     }
 
     public void moveUp(float elapsed) {
-        Tile destTile = board.get(posX, (float)Math.floor(posY)).get(Direction.UP);
-        if (!destTile.isTraversable()) return;
+        if (Math.ceil(posY) != Math.round(posY)) { // We are entering a cell
+            Tile destTile = board.get(posX, (float)Math.floor(posY)).get(Direction.UP);
+            if (!destTile.isTraversable()) return;
+        }
         
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(posX) - posX;
@@ -55,8 +60,10 @@ public class Player {
     }
 
     public void moveDown(float elapsed) {
-        Tile destTile = board.get(posX, (float)Math.ceil(posY)).get(Direction.DOWN);
-        if (!destTile.isTraversable()) return;
+        if (Math.floor(posY) != Math.round(posY)) { // We are entering a cell
+            Tile destTile = board.get(posX, (float)Math.ceil(posY)).get(Direction.DOWN);
+            if (!destTile.isTraversable()) return;
+        }
         
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(posX) - posX;
@@ -72,8 +79,10 @@ public class Player {
     }
 
     public void moveLeft(float elapsed) {
-        Tile destTile = board.get((float)Math.ceil(posX), posY).get(Direction.LEFT);
-        if (!destTile.isTraversable()) return;
+        if (Math.floor(posX) != Math.round(posX)) { // We are entering a cell
+            Tile destTile = board.get((float)Math.ceil(posX), posY).get(Direction.LEFT);
+            if (!destTile.isTraversable()) return;
+        }
         
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(posY) - posY;
@@ -89,9 +98,10 @@ public class Player {
     }
 
     public void moveRight(float elapsed) {
-        Tile destTile = board.get((float)Math.floor(posX), posY).get(Direction.RIGHT);
-        if (!destTile.isTraversable()) return;
-        
+        if (Math.ceil(posX) != Math.round(posX)) { // We are entering a cell
+            Tile destTile = board.get((float)Math.floor(posX), posY).get(Direction.RIGHT);
+            if (!destTile.isTraversable()) return;
+        }        
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(posY) - posY;
 
@@ -103,6 +113,10 @@ public class Player {
             return;
         }
         posX+=distToMove;
+    }
+
+    public void dropBomb() {
+        board.get(posX, posY).add(new BombItem(board, shader, Math.round(posX), Math.round(posY)));
     }
 
 }

@@ -62,7 +62,7 @@ public class Main {
         int nbFrame = 0;
         while (!glfwWindowShouldClose(window)) {
             double time = glfwGetTime();
-            double elapsed = time - lastTime;
+            float elapsed = (float) (time - lastTime);
             lastTime = time;
             timeToStat -= elapsed;
             nbFrame++;
@@ -76,7 +76,8 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.update();
-            keyManager.update((float)elapsed);
+            keyManager.update(elapsed);
+            board.update(elapsed);
             
             board.render();
             player.render();

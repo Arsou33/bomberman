@@ -25,12 +25,11 @@ public class Board {
     private final Texture grassTexture;
 
     
-    
     public Board(ProgramShader shader) {
         this.tiles = new Tile[nbTilesWidth][nbTilesHeight];
         for (int i=0; i<nbTilesWidth; i++) {
             for (int j=0; j<nbTilesHeight; j++) {
-               tiles[i][j] = new Tile(this,i,j); 
+               tiles[i][j] = new Tile(shader, this,i,j); 
             }
         }
         
@@ -58,9 +57,9 @@ public class Board {
         for (int i=0; i<nbTilesWidth; i++) {
             for (int j=0; j<nbTilesHeight; j++) {
                 if (i==0 || j==0 || i==nbTilesWidth-1 || j==nbTilesHeight-1 || (i%2==0 && j%2==0)) {
-                    tiles[i][j].addItem(new BrickBoxItem(shader, i, j));
+                    tiles[i][j].add(new BrickBoxItem(this, shader, i, j));
                 } else if (distance(1,1, i,j)>4 && distance(nbTilesWidth-2, nbTilesHeight-2, i,j)>4 && rand.nextInt(10)<3) {
-                    tiles[i][j].addItem(new WoodBoxItem(shader, i, j));
+                    tiles[i][j].add(new WoodBoxItem(this, shader, i, j));
                 }
             }
         }
@@ -69,6 +68,14 @@ public class Board {
     
     private int distance(int i1, int j1, int i2, int j2) {
         return Math.abs(i1-i2) + Math.abs(j1-j2);
+    }
+    
+    public void update(float elapsed) {
+        for (int i=0; i<nbTilesWidth; i++) {
+            for (int j=0; j<nbTilesHeight; j++) {
+                tiles[i][j].update(elapsed);
+            }
+        }
     }
 
     public void render() {

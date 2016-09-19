@@ -12,13 +12,19 @@ public class WoodBoxItem extends Item {
     
     private final Geometry geometry; 
 
-    public WoodBoxItem(ProgramShader shader, int i, int j) {
+    public WoodBoxItem(Board board, ProgramShader shader, int i, int j) {
+        super(shader, board, i, j);
         geometry = new Geometry(woodBoxMesh, shader);
         geometry.setPosition(i, j, 0);
     }
 
     @Override
     public boolean isTraversable() {
+        return false;
+    }
+
+    @Override
+    public boolean isPropagateFire() {
         return false;
     }
 
@@ -31,6 +37,16 @@ public class WoodBoxItem extends Item {
     public void release() {
         woodBoxMesh.release();
         woodTexture.release();
+    }
+
+    @Override
+    public boolean update(float elapsed) {
+        return false;
+    }
+
+    @Override
+    public boolean fire() {
+        return true;
     }
 
 }
