@@ -116,7 +116,10 @@ public class Player {
     }
 
     public void dropBomb() {
-        board.get(posX, posY).add(new BombItem(board, shader, Math.round(posX), Math.round(posY)));
+        Tile currentTile = board.get(posX, posY);
+        if (currentTile.canDropBomb()) {
+            currentTile.dropBomb();
+        }
     }
 
 }

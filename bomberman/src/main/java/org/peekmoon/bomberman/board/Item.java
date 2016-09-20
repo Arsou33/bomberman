@@ -22,7 +22,7 @@ public abstract class Item {
     public abstract void release();
 
     public Item(ProgramShader shader, Board board, int i, int j) {
-        log.debug("Creating new Item of type {} at potisiont {},{}", this.getClass().getSimpleName(), i,j);
+        log.debug("Creating new Item of type {} at position {},{}", this.getClass().getSimpleName(), i,j);
         this.shader = shader;
         this.board = board;
         this.i = i;
@@ -41,6 +41,13 @@ public abstract class Item {
     public Tile getTile() {
         return tile;
     }
+    
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " [i=" + i + ", j=" + j + "]";
+    }
+    
+    
     
     
 
