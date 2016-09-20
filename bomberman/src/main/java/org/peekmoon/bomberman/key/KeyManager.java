@@ -8,8 +8,13 @@ import java.util.List;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.peekmoon.bomberman.Camera;
 import org.peekmoon.bomberman.board.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KeyManager extends GLFWKeyCallback {
+    
+    private final static Logger log = LoggerFactory.getLogger(KeyManager.class);
+
     
     private final float speed = 0.05f;
     private final long window;
@@ -58,7 +63,7 @@ public class KeyManager extends GLFWKeyCallback {
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_REPEAT) return;
-        System.out.println("Invoke Key : " + key + " scancode : " + scancode + " action : " + action + " mods : " + mods);
+        log.debug("Invoke Key : {} scancode : {} action : {} mods : {}", key, scancode, action, mods);
         
         if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
             player.dropBomb();

@@ -11,12 +11,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.peekmoon.bomberman.board.Board;
 import org.peekmoon.bomberman.board.Player;
@@ -24,14 +21,17 @@ import org.peekmoon.bomberman.key.KeyManager;
 import org.peekmoon.bomberman.shader.FragmentShader;
 import org.peekmoon.bomberman.shader.ProgramShader;
 import org.peekmoon.bomberman.shader.VertexShader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
     
+    private final static Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("Bomberman starting...");
+		log.info("Bomberman starting...");
 		new Main().start();
-		System.out.println("Bomberman finished...");
+		log.info("Bomberman finished...");
 	}
 	
 	private long window;
@@ -67,7 +67,7 @@ public class Main {
             timeToStat -= elapsed;
             nbFrame++;
             if (timeToStat < 0) {
-                System.out.println("FPS : " + nbFrame);
+                log.debug("FPS : {}", nbFrame);
                 nbFrame = 0;
                 timeToStat=1;
             }
@@ -91,7 +91,10 @@ public class Main {
     }
 
     private void initOpenGlWindow() {
-        errorCallback = GLFWErrorCallback.createPrint(System.err);
+        errorCallback = GLFWErrorCallback.create((error, description) -> log.error(
+                "LWJGL Error - Code: {}, Description: {}",
+                Integer.toHexString(error),
+                GLFWErrorCallback.getDescription(description)));
         glfwSetErrorCallback(errorCallback);
         
         if (!glfwInit()) {

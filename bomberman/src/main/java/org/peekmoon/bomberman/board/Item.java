@@ -1,8 +1,13 @@
 package org.peekmoon.bomberman.board;
 
+import org.peekmoon.bomberman.Main;
 import org.peekmoon.bomberman.shader.ProgramShader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Item {
+    
+    private final static Logger log = LoggerFactory.getLogger(Main.class);
     
     private final ProgramShader shader;
     private final Board board;
@@ -17,6 +22,7 @@ public abstract class Item {
     public abstract void release();
 
     public Item(ProgramShader shader, Board board, int i, int j) {
+        log.debug("Creating new Item of type {} at potisiont {},{}", this.getClass().getSimpleName(), i,j);
         this.shader = shader;
         this.board = board;
         this.i = i;

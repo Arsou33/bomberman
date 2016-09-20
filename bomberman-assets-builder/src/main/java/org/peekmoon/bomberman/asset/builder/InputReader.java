@@ -1,8 +1,14 @@
 package org.peekmoon.bomberman.asset.builder;
 
+import org.peekmoon.bomberman.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 public class InputReader {
+    
+    private final static Logger log = LoggerFactory.getLogger(InputReader.class);
+
     
     private String semantic;
     private SourceReader source; // TODO : Replace by reference to source
@@ -15,7 +21,7 @@ public class InputReader {
         if (element.hasAttribute("offset")) {
             offset = Integer.parseInt(element.getAttribute("offset"));
         }
-        System.out.println("Find an input " + semantic + " reference : " + source + " offset : " + offset );
+        log.debug("Find an input " + semantic + " reference : " + source + " offset : " + offset );
     }
 
     public boolean isSemantic(String semantic) {
