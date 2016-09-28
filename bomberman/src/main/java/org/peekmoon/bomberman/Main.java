@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
 
 import org.lwjgl.glfw.Callbacks;
@@ -18,6 +21,8 @@ import org.lwjgl.opengl.GL;
 import org.peekmoon.bomberman.board.Board;
 import org.peekmoon.bomberman.board.Player;
 import org.peekmoon.bomberman.key.KeyManager;
+import org.peekmoon.bomberman.network.CommandSender;
+import org.peekmoon.bomberman.network.StatusReceiver;
 import org.peekmoon.bomberman.shader.FragmentShader;
 import org.peekmoon.bomberman.shader.ProgramShader;
 import org.peekmoon.bomberman.shader.VertexShader;
@@ -28,7 +33,7 @@ public class Main {
     
     private final static Logger log = LoggerFactory.getLogger(Main.class);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, URISyntaxException  {
 		log.info("Bomberman starting...");
 		new Main().start();
 		log.info("Bomberman finished...");
@@ -36,6 +41,8 @@ public class Main {
 	
 	private long window;
 	private GLFWErrorCallback errorCallback;
+	
+	private DatagramSocket socket;
 	
     private Board board;
     private Player player;
@@ -54,7 +61,16 @@ public class Main {
         board = new Board(shader);
         player = new Player(board, shader);
         camera = new Camera(shader);
-        KeyManager keyManager = new KeyManager(window, player, camera);
+        
+        socket = new DatagramSocket(); // Bound to an ephemeral port
+        CommandSender commandSender = new CommandSender(socket);
+        commandSender.register();
+        StatusReceiver statusReceiver = new StatusReceiver(socket);
+        statusReceiver.next();
+        Thread statusReceiverThread = new Thread(statusReceiver, "Status receiver");
+        statusReceiverThread.setDaemon(true); // TODO : clean stop
+        statusReceiverThread.start();
+        KeyManager keyManager = new KeyManager(window, commandSender, camera);
         glfwSetKeyCallback(window, keyManager);
         
         double lastTime = glfwGetTime();
@@ -67,9 +83,9 @@ public class Main {
             timeToStat -= elapsed;
             nbFrame++;
             if (timeToStat < 0) {
-                log.debug("FPS : {}", nbFrame);
+                log.debug("FPS : {}", nbFrame/15);
                 nbFrame = 0;
-                timeToStat=1;
+                timeToStat=15;
             }
             
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
@@ -78,6 +94,7 @@ public class Main {
             camera.update();
             keyManager.update(elapsed);
             board.update(elapsed);
+            player.updateStatus(statusReceiver.getStatus());
             
             board.render();
             player.render();
@@ -123,6 +140,7 @@ public class Main {
     }
 
     private void release() {
+        socket.close();
         board.release();
         player.release();
         testTexture.release();

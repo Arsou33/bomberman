@@ -1,1 +1,1 @@
-include 'bomberman','bomberman-assets-builder'
+include 'bomberman-common', 'bomberman','bomberman-server','bomberman-assets-builder'

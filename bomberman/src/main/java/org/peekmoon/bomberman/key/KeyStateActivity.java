@@ -1,25 +1,24 @@
 package org.peekmoon.bomberman.key;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.*;
 
-public class KeyStateAction {
+public class KeyStateActivity {
     
     private long window;
     private final int key;
     private final KeyMod[] mods;
-    private final KeyAction action;
+    private final KeyActivity activity;
     
     
-    public KeyStateAction(long window, int key, KeyAction action, KeyMod... mods) {
+    public KeyStateActivity(long window, int key, KeyActivity activity, KeyMod... mods) {
         this.window = window;
         this.key = key;
         this.mods = mods;
-        this.action = action;
+        this.activity = activity;
     }
     
     public void update(float elapsed) {
-        if (isKeyPressed() && isModOk()) action.fire(elapsed);
+        if (isKeyPressed() && isModOk()) activity.fire(elapsed);
     }
 
     private boolean isKeyPressed() {

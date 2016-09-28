@@ -1,6 +1,6 @@
 package org.peekmoon.bomberman.key;
 
 @FunctionalInterface
-public interface KeyAction {
+public interface KeyActivity {
     void fire(float elapsedTime);
 }
