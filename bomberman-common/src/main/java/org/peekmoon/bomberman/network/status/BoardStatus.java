@@ -19,7 +19,7 @@ public class BoardStatus {
     	this(buffer.get(),buffer.get());
 		int nbTiles = buffer.getInt();
 		while (nbTiles>0) {
-			TileStatus tile = new TileStatus(buffer);
+			TileStatus tile = new TileStatus(this, buffer);
 			tiles[tile.getI()][tile.getJ()] = tile;
 			nbTiles--;
 		}
@@ -47,7 +47,7 @@ public class BoardStatus {
 		for (int i=0; i<width; i++) {
 	        for (int j=0; j<height; j++) {
 	        	if (tiles[i][j] == null) {
-	        		tiles[i][j] = new TileStatus(i,j);
+	        		tiles[i][j] = new TileStatus(this, i,j);
 	        	}
 	        }
 	    }
@@ -67,6 +67,10 @@ public class BoardStatus {
 	
 	public int getHeight() {
 		return height;
+	}
+
+	public TileStatus get(float x, float y) {
+		return tiles[Math.round(x)][Math.round(y)];
 	}
 
 

@@ -24,10 +24,6 @@ public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
 	}
 
     /*
-    @Override
-    public boolean isTraversable() {
-        return false;
-    }
 
     @Override
     public boolean isPropagateFire() {

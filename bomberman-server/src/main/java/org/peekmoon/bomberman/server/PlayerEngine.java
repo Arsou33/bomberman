@@ -4,16 +4,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.peekmoon.bomberman.network.Direction;
+import org.peekmoon.bomberman.network.status.BoardStatus;
 import org.peekmoon.bomberman.network.status.PlayerStatus;
+import org.peekmoon.bomberman.network.status.TileStatus;
 
 public class PlayerEngine {
     
-    private static final float speed = 3;
+    private static final float speed = 5;
 
     private final PlayerStatus player = new PlayerStatus();
+    private final BoardStatus board;
+    
     private final List<Direction> activeDirections = new LinkedList<>();
     
     private float elapsed = 0.02f; // TODO : Fix elapsed
+
+    
+    public PlayerEngine(BoardStatus board) {
+    	this.board = board;
+    }
     
     
     public void startMove(Direction direction) {
@@ -50,10 +59,10 @@ public class PlayerEngine {
     
     public void moveUp(float elapsed) {
         if (Math.ceil(player.getY()) != Math.round(player.getY())) { // We are entering a cell
-            //Tile destTile = board.get(x, (float)Math.ceil(player.getY())).get(Direction.DOWN);
-            //if (!destTile.isTraversable()) return;
+            TileStatus destTile = board.get(player.getX(), (float)Math.floor(player.getY())).get(Direction.UP);
+            if (!destTile.isTraversable()) return;
         }
-        
+
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(player.getX()) - player.getX();
 
@@ -70,8 +79,8 @@ public class PlayerEngine {
     
     public void moveDown(float elapsed) {
         if (Math.floor(player.getY()) != Math.round(player.getY())) { // We are entering a cell
-            //Tile destTile = board.get(x, (float)Math.ceil(player.getY())).get(Direction.DOWN);
-            //if (!destTile.isTraversable()) return;
+            TileStatus destTile = board.get(player.getX(), (float)Math.ceil(player.getY())).get(Direction.DOWN);
+            if (!destTile.isTraversable()) return;
         }
         
         float distToMove = elapsed * speed;
@@ -89,8 +98,8 @@ public class PlayerEngine {
 
     public void moveLeft(float elapsed) {
         if (Math.floor(player.getX()) != Math.round(player.getX())) { // We are entering a cell
-            //Tile destTile = board.get((float)Math.ceil(posX), posY).get(Direction.LEFT);
-            //if (!destTile.isTraversable()) return;
+            TileStatus destTile = board.get((float)Math.ceil(player.getX()), player.getY()).get(Direction.LEFT);
+            if (!destTile.isTraversable()) return;
         }
         
         float distToMove = elapsed * speed;
@@ -108,8 +117,8 @@ public class PlayerEngine {
 
     public void moveRight(float elapsed) {
         if (Math.ceil(player.getX()) != Math.round(player.getX())) { // We are entering a cell
-            //Tile destTile = board.get((float)Math.floor(posX), posY).get(Direction.RIGHT);
-            //if (!destTile.isTraversable()) return;
+            TileStatus destTile = board.get((float)Math.floor(player.getX()), player.getY()).get(Direction.RIGHT);
+            if (!destTile.isTraversable()) return;
         }        
         float distToMove = elapsed * speed;
         float deltaToAlign = Math.round(player.getY()) - player.getY();

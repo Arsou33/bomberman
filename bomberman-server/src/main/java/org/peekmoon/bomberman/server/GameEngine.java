@@ -14,7 +14,7 @@ public class GameEngine {
 	
 	public GameEngine() {
 		this.boardEngine = new BoardEngine();
-		this.playerEngine = new PlayerEngine();
+		this.playerEngine = new PlayerEngine(boardEngine.getStatus());
 		this.status = new GameStatus(boardEngine.getStatus(), playerEngine.getStatus());
 	}
 	

@@ -25,10 +25,6 @@ public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
 	}
 
 	/*
-    @Override
-    public boolean isTraversable() {
-        return false;
-    }
 
     @Override
     public boolean isPropagateFire() {

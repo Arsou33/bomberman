@@ -1,10 +1,5 @@
 package org.peekmoon.bomberman.board;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.peekmoon.bomberman.network.Direction;
 import org.peekmoon.bomberman.network.status.TileStatus;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
@@ -41,21 +36,6 @@ public class TileRenderer {
     }
     
     /*
-    public TileRenderer get(Direction dir) {
-        switch (dir) {
-        case DOWN:
-            return board.get(i, j-1);
-        case LEFT:
-            return board.get(i-1, j);
-        case RIGHT:
-            return board.get(i+1, j);
-        case UP:
-            return board.get(i, j+1);
-        default:
-            throw new IllegalStateException("Unknown direction " + dir);
-        
-        }
-    }
 
     public void add(ItemRenderer item) {
         items.add(item);
@@ -85,9 +65,7 @@ public class TileRenderer {
         
     }
 
-    public boolean isTraversable() {
-        return items.stream().allMatch(item -> item.isTraversable());
-    }
+
     
     public boolean isPropagateFire() {
         return items.stream().allMatch(item -> item.isPropagateFire());

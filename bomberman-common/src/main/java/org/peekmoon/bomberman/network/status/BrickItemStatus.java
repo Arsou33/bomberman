@@ -11,5 +11,10 @@ public class BrickItemStatus extends ItemStatus {
 	public BrickItemStatus(ByteBuffer buffer, TileStatus tileStatus) {
 		super(tileStatus);
 	}
+	
+    @Override
+    public boolean isTraversable() {
+        return false;
+    }
 
 }

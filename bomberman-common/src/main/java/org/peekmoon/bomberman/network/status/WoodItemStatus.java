@@ -11,5 +11,10 @@ public class WoodItemStatus extends ItemStatus {
 	public WoodItemStatus(ByteBuffer buffer, TileStatus tileStatus) {
 		super(tileStatus);
 	}
+	
+    @Override
+    public boolean isTraversable() {
+        return false;
+    }
 
 }

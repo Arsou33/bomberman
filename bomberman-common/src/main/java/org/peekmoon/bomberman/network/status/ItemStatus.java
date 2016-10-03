@@ -6,6 +6,8 @@ public abstract class ItemStatus {
 	
 	private final TileStatus tileStatus;
 	
+	public abstract boolean isTraversable();
+
 	public ItemStatus(TileStatus tileStatus) {
 		this.tileStatus = tileStatus;
 	}
@@ -34,5 +36,4 @@ public abstract class ItemStatus {
 	public int getJ() {
 		return tileStatus.getJ();
 	}
-
 }
