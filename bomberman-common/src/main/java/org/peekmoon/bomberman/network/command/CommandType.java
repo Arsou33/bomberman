@@ -1,9 +1,10 @@
-package org.peekmoon.bomberman.network;
+package org.peekmoon.bomberman.network.command;
 
 public enum CommandType {
     
     REGISTER(RegisterCommand.class),
-    PLAYER_MOVE(PlayerMoveCommand.class),
+    PLAYER_START_MOVE(PlayerStartMoveCommand.class),
+    PLAYER_STOP_MOVE(PlayerStopMoveCommand.class),
     PLAYER_DROP_BOMB(PlayerDropBombCommand.class);
 
     private Class<? extends Command> clazz;

@@ -7,7 +7,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
-import org.peekmoon.bomberman.board.Direction;
+import org.peekmoon.bomberman.network.command.Command;
+import org.peekmoon.bomberman.network.command.PlayerDropBombCommand;
+import org.peekmoon.bomberman.network.command.PlayerStartMoveCommand;
+import org.peekmoon.bomberman.network.command.PlayerStopMoveCommand;
+import org.peekmoon.bomberman.network.command.RegisterCommand;
 
 public class CommandSender {
     
@@ -34,11 +38,11 @@ public class CommandSender {
     }
     
     public void playerStartMove(Direction direction) {
-        send(new PlayerMoveCommand(direction, true));
+        send(new PlayerStartMoveCommand(direction));
     }
     
     public void playerStopMove(Direction direction) {
-        send(new PlayerMoveCommand(direction, false));
+        send(new PlayerStopMoveCommand(direction));
     }
 
     public void playerDropBomb() {

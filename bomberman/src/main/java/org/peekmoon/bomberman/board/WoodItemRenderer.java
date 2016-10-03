@@ -3,21 +3,27 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
+import org.peekmoon.bomberman.network.status.WoodItemStatus;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class WoodBoxItem extends Item {
+public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
     
     private static final Texture woodTexture = new Texture("wood-box.png");
     private static final Mesh woodBoxMesh = Mesh.get("cube", woodTexture);
     
     private final Geometry geometry; 
 
-    public WoodBoxItem(Board board, ProgramShader shader, int i, int j) {
-        super(shader, board, i, j);
+    public WoodItemRenderer(ProgramShader shader) {
         geometry = new Geometry(woodBoxMesh, shader);
-        geometry.setPosition(i, j, 0);
     }
 
+	@Override
+	public void render(WoodItemStatus itemStatus) {
+		geometry.setPosition(itemStatus.getI(), itemStatus.getJ(), 0);
+        geometry.render();
+	}
+
+    /*
     @Override
     public boolean isTraversable() {
         return false;
@@ -48,5 +54,7 @@ public class WoodBoxItem extends Item {
     public boolean fire() {
         return true;
     }
+    
+    */
 
 }

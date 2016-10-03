@@ -5,9 +5,9 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peekmoon.bomberman.network.Command;
-import org.peekmoon.bomberman.network.CommandType;
-import org.peekmoon.bomberman.network.RegisterCommand;
+import org.peekmoon.bomberman.network.command.Command;
+import org.peekmoon.bomberman.network.command.CommandType;
+import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.peekmoon.bomberman.server.network.CommandReceiver;
 import org.peekmoon.bomberman.server.network.StatusSender;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class MainServer {
     
     
     public void start() {
-        PlayerEngine engine = new PlayerEngine();
+        GameEngine engine = new GameEngine();
         List<StatusSender> statusSenders = new ArrayList<>();
         
         CommandReceiver receiver = new CommandReceiver();

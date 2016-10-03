@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.peekmoon.bomberman.Camera;
-import org.peekmoon.bomberman.board.Direction;
 import org.peekmoon.bomberman.network.CommandSender;
+import org.peekmoon.bomberman.network.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,9 +79,11 @@ public class KeyManager extends GLFWKeyCallback {
     @Override
     public void invoke(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_REPEAT) return; // Ignore repeat action
+        List<KeyEventActivity> activities = keyEventActivitiesMap.get(key);
+        if (activities == null) return;
         
         log.debug("Invoke Key : {} scancode : {} action : {} mods : {}", key, scancode, action, mods);
-        for (KeyEventActivity keyEventActivities : keyEventActivitiesMap.get(key)) {
+		for (KeyEventActivity keyEventActivities : activities) {
             if (keyEventActivities.isTriggerState(action)) {
                 keyEventActivities.fire(speed); // TODO : Check if have an elapsed on event mean something
             }

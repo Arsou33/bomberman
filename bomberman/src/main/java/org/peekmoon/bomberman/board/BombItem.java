@@ -3,9 +3,10 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
+import org.peekmoon.bomberman.network.Direction;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class BombItem extends Item {
+public class BombItem extends ItemRenderer {
     
     private static final float lifeTime = 4;
     private static final int power = 3;
@@ -16,7 +17,7 @@ public class BombItem extends Item {
     private final Geometry geometry; 
     private float countdown;
     
-    public BombItem(Board board, ProgramShader shader, int i, int j) {
+    public BombItem(BoardRenderer board, ProgramShader shader, int i, int j) {
         super(shader, board, i, j);
         this.countdown = lifeTime;
         geometry = new Geometry(bombMesh, shader);
@@ -56,7 +57,7 @@ public class BombItem extends Item {
 
     public boolean fire() {
         for (Direction direction : Direction.values()) {
-            Tile currentTile = getTile();
+            TileRenderer currentTile = getTile();
             for (int i=0; i<power; i++) {
                 currentTile = currentTile.get(direction);
                 currentTile.fire();

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
+import org.peekmoon.bomberman.network.status.BoardStatus;
+import org.peekmoon.bomberman.network.status.GameStatus;
+import org.peekmoon.bomberman.network.status.PlayerStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +22,7 @@ public class StatusReceiver implements Runnable {
     private final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
     private final DatagramPacket data = new DatagramPacket(byteBuffer.array(), bufferSize);
     
-    private PlayerStatus status;
+    private GameStatus status;
     
     public StatusReceiver(DatagramSocket socket) {
         this.socket = socket;
@@ -42,15 +44,23 @@ public class StatusReceiver implements Runnable {
             //log.debug("Received status of length {} : {} ", data.getLength(), Arrays.copyOfRange(data.getData(), 0, data.getLength()));
             byteBuffer.position(0);
             byteBuffer.limit(data.getLength());
-            status = new PlayerStatus(byteBuffer);
+            status = new GameStatus(byteBuffer);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
     
-    public PlayerStatus getStatus() {
+    public GameStatus getStatus() {
         return status;
     }
+
+	public PlayerStatus getPlayerStatus() {
+		return status.getPlayerStatus();
+	}
+	
+	public BoardStatus getBoardStatus() {
+		return status.getBoardStatus();
+	}
     
 
 }

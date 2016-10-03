@@ -3,10 +3,8 @@ package org.peekmoon.bomberman.server;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.peekmoon.bomberman.board.Direction;
-import org.peekmoon.bomberman.network.Command;
-import org.peekmoon.bomberman.network.PlayerMoveCommand;
-import org.peekmoon.bomberman.network.PlayerStatus;
+import org.peekmoon.bomberman.network.Direction;
+import org.peekmoon.bomberman.network.status.PlayerStatus;
 
 public class PlayerEngine {
     
@@ -16,6 +14,16 @@ public class PlayerEngine {
     private final List<Direction> activeDirections = new LinkedList<>();
     
     private float elapsed = 0.02f; // TODO : Fix elapsed
+    
+    
+    public void startMove(Direction direction) {
+        activeDirections.remove(direction); // Should not be in but just in case udp packet lost
+        activeDirections.add(0, direction);
+    }
+    
+    public void stopMove(Direction direction) {
+    	activeDirections.remove(direction);
+    }
     
     public void move(Direction direction) {
         if (direction == null) return;
@@ -123,25 +131,6 @@ public class PlayerEngine {
             currentTile.dropBomb();
         }
         */
-    }
-
-    public void apply(Command command) {
-        // TODO : Use polymorphism to apply instead of instanceof
-        switch (command.getType()) {
-        case PLAYER_DROP_BOMB:
-            dropBomb();
-            break;
-        case PLAYER_MOVE:
-            PlayerMoveCommand playerMoveCommand = (PlayerMoveCommand)command;
-            activeDirections.remove(playerMoveCommand.getDirection());
-            if (playerMoveCommand.isStart()) {
-                activeDirections.add(0, playerMoveCommand.getDirection());
-            }
-            break;
-        default:
-            throw new IllegalStateException("Unknown type " + command.getType());
-        
-        }
     }
 
     public PlayerStatus getStatus() {

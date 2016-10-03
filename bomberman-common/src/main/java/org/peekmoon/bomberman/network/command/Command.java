@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.network;
+package org.peekmoon.bomberman.network.command;
 
 import java.lang.reflect.Constructor;
 import java.nio.ByteBuffer;

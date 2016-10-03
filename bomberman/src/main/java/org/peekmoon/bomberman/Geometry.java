@@ -5,7 +5,6 @@ import org.peekmoon.bomberman.shader.ModelMatrix;
 
 public class Geometry {
     
-    
     private Mesh mesh;
     private ModelMatrix modelMatrix;
     private Matrix4f transformation;
@@ -24,15 +23,6 @@ public class Geometry {
     public void render() {
         modelMatrix.setModelMatrix(transformation);
         mesh.draw();
-    }
-
-    public void scale(float scale) {
-        transformation.scale(scale);
-        
-    }
-
-    public void translate(float x, float y, float z) {
-        transformation.translate(x,y,z);
     }
 
 }

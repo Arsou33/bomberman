@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.peekmoon.bomberman.network.Command;
-import org.peekmoon.bomberman.network.RegisterCommand;
+import org.peekmoon.bomberman.network.command.Command;
+import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,7 +5,7 @@ import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class FireItem extends Item {
+public class FireItem extends ItemRenderer {
     
     private static final float lifeTime = 1.5f;
     
@@ -15,7 +15,7 @@ public class FireItem extends Item {
     private final Geometry geometry; 
     private float countdown;
     
-    public FireItem(Board board, ProgramShader shader, int i, int j) {
+    public FireItem(BoardRenderer board, ProgramShader shader, int i, int j) {
         super(shader, board, i, j);
         this.countdown = lifeTime;
         geometry = new Geometry(fireMesh, shader);

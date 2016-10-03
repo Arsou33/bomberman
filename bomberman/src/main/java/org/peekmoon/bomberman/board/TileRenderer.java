@@ -4,20 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peekmoon.bomberman.network.Direction;
+import org.peekmoon.bomberman.network.status.TileStatus;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class Tile {
+public class TileRenderer {
+	
+	private final ItemRenderers itemRenderers;
     
-    private final ProgramShader shader;
-    private final Board board;
-    private final int i;
-    private final int j;
+    //private final ProgramShader shader;
+    //private final BoardRenderer board;
+    //private final int i;
+    //private final int j;
     
-    private boolean startFire;
+    //private boolean startFire;
     
-    private final List<Item> items;
+    //private final List<ItemRenderer> items;
     
-    public Tile(ProgramShader shader, Board board, int i, int j) {
+	/*
+    public TileRenderer(ProgramShader shader, BoardRenderer board, int i, int j) {
         this.shader = shader;
         this.board = board;
         this.i = i;
@@ -25,8 +30,18 @@ public class Tile {
         this.startFire = false;
         this.items = new ArrayList<>();
     }
+    */
     
-    public Tile get(Direction dir) {
+    public TileRenderer(ProgramShader shader) {
+    	itemRenderers = new ItemRenderers(shader);
+    }
+    
+    public void render(TileStatus status) {
+        status.getItems().stream().forEach(item -> itemRenderers.render(item));
+    }
+    
+    /*
+    public TileRenderer get(Direction dir) {
         switch (dir) {
         case DOWN:
             return board.get(i, j-1);
@@ -42,18 +57,21 @@ public class Tile {
         }
     }
 
-    public void add(Item item) {
+    public void add(ItemRenderer item) {
         items.add(item);
     }
     
     public void fire() {
         startFire = true;
     }
+    */
+
 
     /**
      * A bomb can be drop only if nothing else is on the tile
      * @return
      */
+    /*
     public boolean canDropBomb() {
         return items.isEmpty();
     }
@@ -83,9 +101,6 @@ public class Tile {
             startFire = false;
         }
     }
-
-    public void render() {
-        items.stream().forEach(item -> item.render());
-    }
+    */
 
 }

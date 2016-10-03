@@ -1,7 +1,7 @@
-package org.peekmoon.bomberman.network;
+package org.peekmoon.bomberman.network.status;
 
 import java.nio.ByteBuffer;
-// TODO : Check if synchronized are necessary
+// TODO : Check if synchronized are necessary if yes put every where in xxxStatus
 public class PlayerStatus {
     
     private float x,y;

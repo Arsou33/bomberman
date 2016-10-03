@@ -18,8 +18,8 @@ import java.net.URISyntaxException;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.peekmoon.bomberman.board.Board;
-import org.peekmoon.bomberman.board.Player;
+import org.peekmoon.bomberman.board.BoardRenderer;
+import org.peekmoon.bomberman.board.PlayerRenderer;
 import org.peekmoon.bomberman.key.KeyManager;
 import org.peekmoon.bomberman.network.CommandSender;
 import org.peekmoon.bomberman.network.StatusReceiver;
@@ -44,8 +44,8 @@ public class Main {
 	
 	private DatagramSocket socket;
 	
-    private Board board;
-    private Player player;
+    private BoardRenderer board;
+    private PlayerRenderer player;
     private Camera camera;
     
     private Texture testTexture;
@@ -58,8 +58,8 @@ public class Main {
         
         testTexture = new Texture("test.png");
         
-        board = new Board(shader);
-        player = new Player(board, shader);
+        board = new BoardRenderer(shader);
+        player = new PlayerRenderer(board, shader);
         camera = new Camera(shader);
         
         socket = new DatagramSocket(); // Bound to an ephemeral port
@@ -93,11 +93,10 @@ public class Main {
 
             camera.update();
             keyManager.update(elapsed);
-            board.update(elapsed);
-            player.updateStatus(statusReceiver.getStatus());
+            //board.update(elapsed);
             
-            board.render();
-            player.render();
+            board.render(statusReceiver.getBoardStatus());
+            player.render(statusReceiver.getPlayerStatus());
 
             glfwSwapBuffers(window);
             glfwPollEvents();

@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.network;
+package org.peekmoon.bomberman.network.command;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
