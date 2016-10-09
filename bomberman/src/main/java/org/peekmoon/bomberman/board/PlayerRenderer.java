@@ -8,11 +8,9 @@ import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class PlayerRenderer {
     
-    
     private final Geometry geometry;
     private final Mesh cowboyMesh;
     private final Texture cowboyTexture;
-    
     
     public PlayerRenderer(BoardRenderer board, ProgramShader shader) {
         cowboyTexture = new Texture("cowboy.png");
@@ -25,7 +23,6 @@ public class PlayerRenderer {
         geometry.render();
     }
     
-    // TODO : reimplement release
     public void release() {
         cowboyMesh.release();
         cowboyTexture.release();

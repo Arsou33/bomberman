@@ -8,16 +8,11 @@ import java.nio.ByteBuffer;
 
 import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.peekmoon.bomberman.network.status.GameStatus;
-import org.peekmoon.bomberman.network.status.PlayerStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StatusSender {
     
-    private final static Logger log = LoggerFactory.getLogger(StatusSender.class);
-    private final int bufferSize = 1000;
+    private final int bufferSize = 1000; // TODO : Remove numeric (factorize)
 
-    
     private final InetAddress address;
     private final int port;
     private final ByteBuffer buffer;
@@ -33,7 +28,6 @@ public class StatusSender {
     }
     
     public void send() throws IOException {
-        //log.debug("Send status");
         buffer.clear();
         status.fill(buffer);
         DatagramPacket packet = new DatagramPacket(buffer.array(), buffer.position(), address, port);

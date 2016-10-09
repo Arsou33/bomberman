@@ -8,8 +8,8 @@ import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
     
-    private static final Texture brickTexture = new Texture("brick.png");
-    private static final Mesh brickBoxMesh = Mesh.get("cube", brickTexture);
+    private final Texture brickTexture = new Texture("brick.png");
+    private final Mesh brickBoxMesh = Mesh.get("cube", brickTexture);
 
     private final Geometry geometry; 
     
@@ -24,19 +24,9 @@ public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
 		geometry.render();
 	}
 	
-	// TODO  :reimplement release
-
-	/*
-
-    @Override
     public void release() {
         brickBoxMesh.release();
         brickTexture.release();
     }
-
-    */
-
-
-    
 
 }

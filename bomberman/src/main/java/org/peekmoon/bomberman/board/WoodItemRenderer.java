@@ -23,14 +23,10 @@ public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
         geometry.render();
 	}
 
-	// TODO : reimplement release
-    /*
     @Override
     public void release() {
         woodBoxMesh.release();
         woodTexture.release();
     }
-
-    */
 
 }

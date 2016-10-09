@@ -8,8 +8,8 @@ import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class BombItemRenderer extends ItemRenderer<BombItemStatus> {
 	
-    private static final Texture bombTexture = new Texture("bomb.png");
-    private static final Mesh bombMesh = Mesh.get("bomb", bombTexture);
+    private final Texture bombTexture = new Texture("bomb.png");
+    private final Mesh bombMesh = Mesh.get("bomb", bombTexture);
 
     private final Geometry geometry; 
     
@@ -23,17 +23,10 @@ public class BombItemRenderer extends ItemRenderer<BombItemStatus> {
 		geometry.render();
 	}
 	
-
-  //TODO : reimplement release
- /*
-     @Override
+    @Override
     public void release() {
         bombMesh.release();
         bombTexture.release();
-        
     }
-
-
-*/
 
 }

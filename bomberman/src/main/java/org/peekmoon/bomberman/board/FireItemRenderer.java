@@ -17,23 +17,17 @@ public class FireItemRenderer extends ItemRenderer<FireItemStatus> {
         geometry = new Geometry(fireMesh, shader);
     }
 
-
 	@Override
 	public void render(FireItemStatus item) {
 		geometry.setPosition(item.getI(), item.getJ(), 0);
 		geometry.render();
-		
 	}
 
-    //TODO : Reimplement release
-    /*
     @Override
     public void release() {
         fireMesh.release();
         fireTexture.release();
         
     }
-    */
-
 
 }

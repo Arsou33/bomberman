@@ -42,6 +42,13 @@ public class ItemRenderers {
     	
     	}
     }
+    
+    public void release() {
+    	brickItemRenderer.release();
+    	woodItemRenderer.release();
+    	bombItemRenderer.release();
+    	fireItemRenderer.release();
+    }
 
 
 }
