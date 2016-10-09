@@ -16,5 +16,16 @@ public class WoodItemStatus extends ItemStatus {
     public boolean isTraversable() {
         return false;
     }
+    
+    @Override
+    public boolean isPropagateFire() {
+        return false;
+    }
+    
+    @Override
+    public boolean fire() {
+        return true;
+    }
+
 
 }

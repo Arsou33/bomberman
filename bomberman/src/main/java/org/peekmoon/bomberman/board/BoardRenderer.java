@@ -30,16 +30,6 @@ public class BoardRenderer {
         this.tileRenderer = new TileRenderer(shader);
     }
     
-    /*
-    public void update(float elapsed) {
-        for (int i=0; i<nbTilesWidth; i++) {
-            for (int j=0; j<nbTilesHeight; j++) {
-                tiles[i][j].update(elapsed);
-            }
-        }
-    }
-    */
-
     public void render(BoardStatus status) {
         for (int i=0; i<status.getWidth(); i++) {
             for (int j=0; j<status.getHeight(); j++) {

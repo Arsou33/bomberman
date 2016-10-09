@@ -16,5 +16,15 @@ public class BrickItemStatus extends ItemStatus {
     public boolean isTraversable() {
         return false;
     }
+    
+    @Override
+    public boolean isPropagateFire() {
+        return false;
+    }
+    
+    @Override
+    public boolean fire() {
+        return false;
+    }
 
 }

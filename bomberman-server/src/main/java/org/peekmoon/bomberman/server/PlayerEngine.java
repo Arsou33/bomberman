@@ -134,12 +134,10 @@ public class PlayerEngine {
     }
 
     public void dropBomb() {
-        /*
-        Tile currentTile = board.get(posX, posY);
+        TileStatus currentTile = board.get(player.getX(), player.getY());
         if (currentTile.canDropBomb()) {
             currentTile.dropBomb();
         }
-        */
     }
 
     public PlayerStatus getStatus() {

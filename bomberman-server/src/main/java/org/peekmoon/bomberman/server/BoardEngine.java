@@ -36,6 +36,15 @@ public class BoardEngine {
 	public BoardStatus getStatus() {
 		return status;
 	}
+
+	public void update() {
+        for (int i=0; i<nbTilesWidth; i++) {
+            for (int j=0; j<nbTilesHeight; j++) {
+            	status.getTile(i,j).update();
+            }
+        }
+	}
+	
 	
 
 }

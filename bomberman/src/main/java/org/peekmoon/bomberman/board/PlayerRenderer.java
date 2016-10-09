@@ -25,6 +25,7 @@ public class PlayerRenderer {
         geometry.render();
     }
     
+    // TODO : reimplement release
     public void release() {
         cowboyMesh.release();
         cowboyTexture.release();

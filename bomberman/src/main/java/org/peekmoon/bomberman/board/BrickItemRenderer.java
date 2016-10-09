@@ -23,18 +23,10 @@ public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
 		geometry.setPosition(item.getI(), item.getJ(), 0);
 		geometry.render();
 	}
+	
+	// TODO  :reimplement release
 
 	/*
-
-    @Override
-    public boolean isPropagateFire() {
-        return false;
-    }
-
-    @Override
-    public void render() {
-        geometry.render();
-    }
 
     @Override
     public void release() {
@@ -42,15 +34,6 @@ public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
         brickTexture.release();
     }
 
-    @Override
-    public boolean update(float elapsed) {
-        return false; 
-    }
-
-    @Override
-    public boolean fire() {
-        return false;
-    }
     */
 
 

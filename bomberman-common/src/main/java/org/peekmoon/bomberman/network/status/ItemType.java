@@ -2,7 +2,9 @@ package org.peekmoon.bomberman.network.status;
 
 public enum ItemType {
 	BRICK(BrickItemStatus.class),
-	WOOD(WoodItemStatus.class);
+	WOOD(WoodItemStatus.class),
+	BOMB(BombItemStatus.class),
+	FIRE(FireItemStatus.class);
 	
 	private Class<? extends ItemStatus> clazz;
 

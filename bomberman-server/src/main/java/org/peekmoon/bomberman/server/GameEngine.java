@@ -42,6 +42,7 @@ public class GameEngine {
 
 	public void update() {
 		playerEngine.update();
+		boardEngine.update();
 	}
 
 

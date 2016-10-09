@@ -23,34 +23,14 @@ public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
         geometry.render();
 	}
 
+	// TODO : reimplement release
     /*
-
-    @Override
-    public boolean isPropagateFire() {
-        return false;
-    }
-
-    @Override
-    public void render() {
-        geometry.render();
-    }
-
     @Override
     public void release() {
         woodBoxMesh.release();
         woodTexture.release();
     }
 
-    @Override
-    public boolean update(float elapsed) {
-        return false;
-    }
-
-    @Override
-    public boolean fire() {
-        return true;
-    }
-    
     */
 
 }
