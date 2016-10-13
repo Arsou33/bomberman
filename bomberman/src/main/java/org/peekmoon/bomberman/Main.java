@@ -13,6 +13,7 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.peekmoon.bomberman.board.BoardRenderer;
+import org.peekmoon.bomberman.board.GameRenderer;
 import org.peekmoon.bomberman.board.PlayerRenderer;
 import org.peekmoon.bomberman.key.KeyManager;
 import org.peekmoon.bomberman.network.CommandSender;
@@ -38,22 +39,17 @@ public class Main {
 	
 	private DatagramSocket socket;
 	
-    private BoardRenderer board;
-    private PlayerRenderer player;
+	private GameRenderer gameRenderer;
     private Camera camera;
     
-    private Texture testTexture;
-
     private void start() throws IOException, URISyntaxException {
         initOpenGlWindow();
         
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
         
-        testTexture = new Texture("test.png");
+        gameRenderer = new GameRenderer(shader);
         
-        board = new BoardRenderer(shader);
-        player = new PlayerRenderer(board, shader);
         camera = new Camera(shader);
         
         socket = new DatagramSocket(); // Bound to an ephemeral port
@@ -87,10 +83,8 @@ public class Main {
 
             camera.update();
             keyManager.update(elapsed);
-            //board.update(elapsed);
             
-            board.render(statusReceiver.getBoardStatus());
-            player.render(statusReceiver.getPlayerStatus());
+            gameRenderer.render(statusReceiver.getStatus());
 
             glfwSwapBuffers(window);
             glfwPollEvents();
@@ -134,9 +128,7 @@ public class Main {
 
     private void release() {
         socket.close();
-        board.release();
-        player.release();
-        testTexture.release();
+        gameRenderer.release();
         glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);
         glfwTerminate();

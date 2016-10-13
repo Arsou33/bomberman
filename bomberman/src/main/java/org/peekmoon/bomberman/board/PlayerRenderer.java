@@ -12,7 +12,7 @@ public class PlayerRenderer {
     private final Mesh cowboyMesh;
     private final Texture cowboyTexture;
     
-    public PlayerRenderer(BoardRenderer board, ProgramShader shader) {
+    public PlayerRenderer(ProgramShader shader) {
         cowboyTexture = new Texture("cowboy.png");
         cowboyMesh = Mesh.get("cowboy", cowboyTexture);
         geometry = new Geometry(cowboyMesh, shader);

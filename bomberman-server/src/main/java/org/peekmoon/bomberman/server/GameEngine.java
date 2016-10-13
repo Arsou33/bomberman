@@ -7,31 +7,25 @@ import org.peekmoon.bomberman.network.status.GameStatus;
 
 public class GameEngine {
 	
-	private final GameStatus status;
-	
-	private final BoardEngine boardEngine;
-	private final PlayerEngine playerEngine;
+	private final GameStatus game;
 	
 	public GameEngine() {
-		this.boardEngine = new BoardEngine();
-		this.playerEngine = new PlayerEngine(boardEngine.getStatus());
-		this.status = new GameStatus(boardEngine.getStatus(), playerEngine.getStatus());
+		this.game = new GameStatus();
 	}
-	
 	
 	public void apply(Command command) {
         // TODO : Use polymorphism to apply instead of instanceof
         switch (command.getType()) {
         case PLAYER_DROP_BOMB:
-            playerEngine.dropBomb();
+            game.dropBomb();
             break;
         case PLAYER_START_MOVE:
             PlayerStartMoveCommand playerStartMoveCommand = (PlayerStartMoveCommand)command;
-            playerEngine.startMove(playerStartMoveCommand.getDirection());
+            game.startMove(playerStartMoveCommand.getDirection());
             break;
         case PLAYER_STOP_MOVE:
         	PlayerStopMoveCommand playerStopMoveCommand = (PlayerStopMoveCommand)command;
-            playerEngine.stopMove(playerStopMoveCommand.getDirection());
+        	game.stopMove(playerStopMoveCommand.getDirection());
             break;
         default:
             throw new IllegalStateException("Unknown type " + command.getType());
@@ -41,13 +35,12 @@ public class GameEngine {
 
 
 	public void update() {
-		playerEngine.update();
-		boardEngine.update();
+		game.update();
 	}
 
 
 	public GameStatus getStatus() {
-		return status;
+		return game;
 	}
 		
 
