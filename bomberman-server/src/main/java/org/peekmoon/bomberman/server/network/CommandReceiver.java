@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.peekmoon.bomberman.network.command.Command;
-import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,12 +41,7 @@ public class CommandReceiver implements Runnable {
                 log.debug("Received data of length {} : {} ", data.getLength(), Arrays.copyOfRange(data.getData(), 0, data.getLength()));
                 byteBuffer.position(0);
                 byteBuffer.limit(data.getLength());
-                Command command = Command.extractFrom(byteBuffer);
-                if (command instanceof RegisterCommand) {
-                    RegisterCommand registerCommand = (RegisterCommand)command;
-                    registerCommand.setPort(data.getPort());
-                    registerCommand.setAddress(data.getAddress());
-                }
+                Command command = Command.extractFrom(data.getAddress(), data.getPort(), byteBuffer);
                 synchronized (commands) {
                     commands.add(command);
                 }

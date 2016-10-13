@@ -19,9 +19,10 @@ public class Player {
         y = buffer.getFloat();
     }
     
-    public Player(Board board) {
+    public Player(Board board, int i, int j) {
 		this.board = board;
-		x= y = 1;
+		x = i;
+		y = j;
 	}
 
 	public synchronized void fill(ByteBuffer buffer) {

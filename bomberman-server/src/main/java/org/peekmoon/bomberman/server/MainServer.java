@@ -2,8 +2,6 @@ package org.peekmoon.bomberman.server;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.peekmoon.bomberman.network.command.Command;
 import org.peekmoon.bomberman.network.command.CommandType;
@@ -14,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MainServer {
-    
+
     private final static Logger log = LoggerFactory.getLogger(MainServer.class);
     private final static long period = 20;
 
@@ -22,37 +20,35 @@ public class MainServer {
         log.info("Sarting bomberman server...");
         new MainServer().start();
     }
-    
-    
+
     public void start() {
-        GameEngine engine = new GameEngine();
-        List<StatusSender> statusSenders = new ArrayList<>();
-        
+
         CommandReceiver receiver = new CommandReceiver();
         new Thread(receiver, "Command receiver").start();
-        
+
         try (DatagramSocket socket = new DatagramSocket()) {
-            long lastTick = System.currentTimeMillis(); 
+
+            GameEngine engine = new GameEngine();
+            StatusSender statusSender = new StatusSender(engine.getStatus(), socket);
+            Clients clients = new Clients(statusSender);
+
+            long lastTick = System.currentTimeMillis();
             while (true) {
                 waitTick(lastTick);
                 lastTick = System.currentTimeMillis();
                 for (Command command : receiver.next()) {
                     if (command.getType() == CommandType.REGISTER) {
-                        RegisterCommand registerCommand = (RegisterCommand)command;
-                        log.info("New player is registering : " + registerCommand.getAddress() + " on " + registerCommand.getPort());
-                        statusSenders.add(new StatusSender(engine.getStatus(), socket, registerCommand));
+                        clients.register((RegisterCommand) command);
                     } else {
-                        engine.apply(command);
+                        engine.apply(clients.getId(command), command);
                     }
-                };
-                
-                engine.update();
-                
-                for (StatusSender statusSender : statusSenders) {
-                    statusSender.send();
                 }
-                
-            }    
+                ;
+
+                engine.update();
+                clients.sendStatus();
+
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -61,7 +57,7 @@ public class MainServer {
     private void waitTick(long lastTick) {
         long currentTick = System.currentTimeMillis();
         long delayFromLast = lastTick - currentTick;
-        if (delayFromLast > period)  {
+        if (delayFromLast > period) {
             log.warn("Too late " + lastTick + " -> " + currentTick);
         } else if (delayFromLast < period) {
             try {
@@ -70,9 +66,7 @@ public class MainServer {
                 throw new IllegalStateException(e);
             }
         }
-        
-        
-        
+
     }
 
 }
