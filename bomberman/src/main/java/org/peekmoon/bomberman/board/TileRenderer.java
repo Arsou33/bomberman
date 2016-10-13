@@ -1,6 +1,6 @@
 package org.peekmoon.bomberman.board;
 
-import org.peekmoon.bomberman.network.status.TileStatus;
+import org.peekmoon.bomberman.model.Tile;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class TileRenderer {
@@ -11,7 +11,7 @@ public class TileRenderer {
     	itemRenderers = new ItemRenderers(shader);
     }
     
-    public void render(TileStatus status) {
+    public void render(Tile status) {
         status.getItems().stream().forEach(item -> itemRenderers.render(item));
     }
     

@@ -1,10 +1,10 @@
 package org.peekmoon.bomberman.board;
 
-import org.peekmoon.bomberman.network.status.BombItemStatus;
-import org.peekmoon.bomberman.network.status.BrickItemStatus;
-import org.peekmoon.bomberman.network.status.FireItemStatus;
-import org.peekmoon.bomberman.network.status.ItemStatus;
-import org.peekmoon.bomberman.network.status.WoodItemStatus;
+import org.peekmoon.bomberman.model.BombItem;
+import org.peekmoon.bomberman.model.BrickItem;
+import org.peekmoon.bomberman.model.FireItem;
+import org.peekmoon.bomberman.model.Item;
+import org.peekmoon.bomberman.model.WoodItem;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class ItemRenderers {
@@ -23,19 +23,19 @@ public class ItemRenderers {
     }
 
     // TODO : search better implementation
-    public void render(ItemStatus itemStatus) {
+    public void render(Item itemStatus) {
     	switch (itemStatus.getType()) {
 		case BRICK:
-			brickItemRenderer.render((BrickItemStatus) itemStatus);
+			brickItemRenderer.render((BrickItem) itemStatus);
 			break;
 		case WOOD:
-			woodItemRenderer.render((WoodItemStatus) itemStatus);
+			woodItemRenderer.render((WoodItem) itemStatus);
 			break;
 		case BOMB:
-			bombItemRenderer.render((BombItemStatus) itemStatus);
+			bombItemRenderer.render((BombItem) itemStatus);
 			break;
 		case FIRE:
-			fireItemRenderer.render((FireItemStatus) itemStatus);
+			fireItemRenderer.render((FireItem) itemStatus);
 			break;
 		default:
 			throw new IllegalStateException("Item status type is unknow to renderer " + itemStatus.getType());

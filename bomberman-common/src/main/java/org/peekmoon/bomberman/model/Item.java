@@ -1,16 +1,16 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 
-public abstract class ItemStatus {
+public abstract class Item {
 	
-	private final TileStatus tileStatus;
+	private final Tile tileStatus;
 	
 	public abstract boolean isTraversable();
 	public abstract boolean isPropagateFire();
 	public abstract boolean fire();
 
-	public ItemStatus(TileStatus tileStatus) {
+	public Item(Tile tileStatus) {
 		this.tileStatus = tileStatus;
 	}
 
@@ -18,10 +18,10 @@ public abstract class ItemStatus {
 		buffer.put(getType().getCode());
 	}
 
-	public static ItemStatus from(ByteBuffer buffer, TileStatus tileStatus) {
+	public static Item from(ByteBuffer buffer, Tile tileStatus) {
 		ItemType type = ItemType.get(buffer.get());
 		try {
-			return type.getItemClass().getConstructor(ByteBuffer.class, TileStatus.class).newInstance(buffer, tileStatus);
+			return type.getItemClass().getConstructor(ByteBuffer.class, Tile.class).newInstance(buffer, tileStatus);
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException("Unable to instanciate ItemStatus for type " + type.getItemClass(), e);
 		}
@@ -35,7 +35,7 @@ public abstract class ItemStatus {
 		return ItemType.get(this.getClass());
 	}
 	
-	protected TileStatus getTile() {
+	protected Tile getTile() {
 		return tileStatus;
 	}
 

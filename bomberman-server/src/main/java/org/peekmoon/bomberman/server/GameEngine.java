@@ -1,16 +1,16 @@
 package org.peekmoon.bomberman.server;
 
+import org.peekmoon.bomberman.model.Game;
 import org.peekmoon.bomberman.network.command.Command;
 import org.peekmoon.bomberman.network.command.PlayerStartMoveCommand;
 import org.peekmoon.bomberman.network.command.PlayerStopMoveCommand;
-import org.peekmoon.bomberman.network.status.GameStatus;
 
 public class GameEngine {
 	
-	private final GameStatus game;
+	private final Game game;
 	
 	public GameEngine() {
-		this.game = new GameStatus();
+		this.game = new Game();
 	}
 	
 	public void apply(Command command) {
@@ -39,7 +39,7 @@ public class GameEngine {
 	}
 
 
-	public GameStatus getStatus() {
+	public Game getStatus() {
 		return game;
 	}
 		

@@ -1,22 +1,20 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.peekmoon.bomberman.network.Direction;
-
-public class TileStatus {
+public class Tile {
 	
-    private final BoardStatus board;
+    private final Board board;
 	private final int i,j;
-    private final List<ItemStatus> items;
+    private final List<Item> items;
     
     private boolean startFire;
 
     
-    public TileStatus(BoardStatus board, int i, int j) {
+    public Tile(Board board, int i, int j) {
     	this.board = board;
     	this.i = i;
     	this.j = j;
@@ -24,11 +22,11 @@ public class TileStatus {
     	this.startFire = false;
     }
 
-	public TileStatus(BoardStatus board, ByteBuffer buffer) {
+	public Tile(Board board, ByteBuffer buffer) {
 		this(board, buffer.get(), buffer.get());
 		int nbItems = buffer.get();
 		while (nbItems>0) {
-			items.add(ItemStatus.from(buffer, this));
+			items.add(Item.from(buffer, this));
 			nbItems--;
 		}
 	}
@@ -37,12 +35,12 @@ public class TileStatus {
 		buffer.put((byte) i);
 		buffer.put((byte) j);
 		buffer.put((byte) items.size());
-		for (ItemStatus item : items) {
+		for (Item item : items) {
 			item.fill(buffer);
 		}
 	}
 
-	public void add(ItemStatus item) {
+	public void add(Item item) {
 		items.add(item);
 	}
 
@@ -50,7 +48,7 @@ public class TileStatus {
 		return items.isEmpty();
 	}
 	
-	public List<ItemStatus> getItems() {
+	public List<Item> getItems() {
 		return items;
 	}
 	
@@ -74,7 +72,7 @@ public class TileStatus {
             String msg = "Items is not empty and contains : " + items.stream().map(item->item.toString()).collect(Collectors.joining("|"));
             throw new IllegalStateException(msg);
         }
-        add(new BombItemStatus(this));
+        add(new BombItem(this));
     }
     
     public void fire() {
@@ -85,12 +83,12 @@ public class TileStatus {
         items.removeIf(item->item.update());
         if (startFire) {
             items.removeIf(item->item.fire());
-            add(new FireItemStatus(this));
+            add(new FireItem(this));
             startFire = false;
         }
     }
 
-	public TileStatus get(Direction dir) {
+	public Tile get(Direction dir) {
 	    switch (dir) {
 	    case DOWN:
 	        return board.get(i, j-1);

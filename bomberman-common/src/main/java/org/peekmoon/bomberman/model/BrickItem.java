@@ -1,14 +1,14 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 
-public class WoodItemStatus extends ItemStatus {
+public class BrickItem extends Item {
 
-	public WoodItemStatus(TileStatus tileStatus) {
+	public BrickItem(Tile tileStatus) {
 		super(tileStatus);
 	}
 	
-	public WoodItemStatus(ByteBuffer buffer, TileStatus tileStatus) {
+	public BrickItem(ByteBuffer buffer, Tile tileStatus) {
 		super(tileStatus);
 	}
 	
@@ -24,8 +24,7 @@ public class WoodItemStatus extends ItemStatus {
     
     @Override
     public boolean fire() {
-        return true;
+        return false;
     }
-
 
 }

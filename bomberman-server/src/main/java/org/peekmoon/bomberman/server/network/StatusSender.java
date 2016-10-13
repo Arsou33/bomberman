@@ -6,8 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
+import org.peekmoon.bomberman.model.Game;
 import org.peekmoon.bomberman.network.command.RegisterCommand;
-import org.peekmoon.bomberman.network.status.GameStatus;
 
 public class StatusSender {
     
@@ -16,10 +16,10 @@ public class StatusSender {
     private final InetAddress address;
     private final int port;
     private final ByteBuffer buffer;
-    private final GameStatus status;
+    private final Game status;
     private final DatagramSocket socket;
     
-    public StatusSender(GameStatus status, DatagramSocket socket, RegisterCommand registerCommand) {
+    public StatusSender(Game status, DatagramSocket socket, RegisterCommand registerCommand) {
         this.status = status;
         this.address = registerCommand.getAddress();
         this.port = registerCommand.getPort();

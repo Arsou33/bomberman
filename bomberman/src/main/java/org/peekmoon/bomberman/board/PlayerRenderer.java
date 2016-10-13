@@ -3,7 +3,7 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
-import org.peekmoon.bomberman.network.status.PlayerStatus;
+import org.peekmoon.bomberman.model.Player;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class PlayerRenderer {
@@ -18,7 +18,7 @@ public class PlayerRenderer {
         geometry = new Geometry(cowboyMesh, shader);
     }
     
-    public void render(PlayerStatus status) {
+    public void render(Player status) {
         geometry.setPosition(status.getX(), status.getY(), 0);
         geometry.render();
     }

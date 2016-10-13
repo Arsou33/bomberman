@@ -3,10 +3,10 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
-import org.peekmoon.bomberman.network.status.BrickItemStatus;
+import org.peekmoon.bomberman.model.BrickItem;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
+public class BrickItemRenderer extends ItemRenderer<BrickItem> {
     
     private final Texture brickTexture = new Texture("brick.png");
     private final Mesh brickBoxMesh = Mesh.get("cube", brickTexture);
@@ -19,7 +19,7 @@ public class BrickItemRenderer extends ItemRenderer<BrickItemStatus> {
     }
     
 	@Override
-	public void render(BrickItemStatus item) {
+	public void render(BrickItem item) {
 		geometry.setPosition(item.getI(), item.getJ(), 0);
 		geometry.render();
 	}

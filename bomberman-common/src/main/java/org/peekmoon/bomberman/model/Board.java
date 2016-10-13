@@ -1,52 +1,52 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-public class BoardStatus {
+public class Board {
 
 	private final static int nbTilesWidth = 21;
 	private final static int nbTilesHeight = 15;
 
 	private final int width;
 	private final int height;
-	private final TileStatus[][] tiles;
+	private final Tile[][] tiles;
 
-	private BoardStatus(int width, int height) {
+	private Board(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tiles = new TileStatus[width][height];
+		tiles = new Tile[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (tiles[i][j] == null) {
-					tiles[i][j] = new TileStatus(this, i, j);
+					tiles[i][j] = new Tile(this, i, j);
 				}
 			}
 		}
 	}
 
-	public BoardStatus() {
+	public Board() {
 		this(nbTilesWidth, nbTilesHeight);
 		// Add brick box to geometry
 		Random rand = new Random(0);
 		for (int i = 0; i < nbTilesWidth; i++) {
 			for (int j = 0; j < nbTilesHeight; j++) {
 				if (i == 0 || j == 0 || i == nbTilesWidth - 1 || j == nbTilesHeight - 1 || (i % 2 == 0 && j % 2 == 0)) {
-					tiles[i][j].add(new BrickItemStatus(getTile(i, j)));
+					tiles[i][j].add(new BrickItem(getTile(i, j)));
 				} else if (distance(1, 1, i, j) > 4 && distance(nbTilesWidth - 2, nbTilesHeight - 2, i, j) > 4
 						&& rand.nextInt(10) < 3) {
-					tiles[i][j].add(new WoodItemStatus(getTile(i, j)));
+					tiles[i][j].add(new WoodItem(getTile(i, j)));
 				}
 			}
 		}
 	}
 
-	public BoardStatus(ByteBuffer buffer) {
+	public Board(ByteBuffer buffer) {
 		this(buffer.get(), buffer.get());
 
 		int nbTiles = buffer.getInt();
 		while (nbTiles > 0) {
-			TileStatus tile = new TileStatus(this, buffer);
+			Tile tile = new Tile(this, buffer);
 			tiles[tile.getI()][tile.getJ()] = tile;
 			nbTiles--;
 		}
@@ -78,7 +78,7 @@ public class BoardStatus {
 		}
 	}
 
-	public TileStatus getTile(int i, int j) {
+	public Tile getTile(int i, int j) {
 		return tiles[i][j];
 	}
 
@@ -90,7 +90,7 @@ public class BoardStatus {
 		return height;
 	}
 
-	public TileStatus get(float x, float y) {
+	public Tile get(float x, float y) {
 		return tiles[Math.round(x)][Math.round(y)];
 	}
 

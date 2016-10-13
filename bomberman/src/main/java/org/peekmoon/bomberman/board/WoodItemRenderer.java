@@ -3,10 +3,10 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
-import org.peekmoon.bomberman.network.status.WoodItemStatus;
+import org.peekmoon.bomberman.model.WoodItem;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
-public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
+public class WoodItemRenderer extends ItemRenderer<WoodItem> {
     
     private static final Texture woodTexture = new Texture("wood-box.png");
     private static final Mesh woodBoxMesh = Mesh.get("cube", woodTexture);
@@ -18,7 +18,7 @@ public class WoodItemRenderer extends ItemRenderer<WoodItemStatus> {
     }
 
 	@Override
-	public void render(WoodItemStatus itemStatus) {
+	public void render(WoodItem itemStatus) {
 		geometry.setPosition(itemStatus.getI(), itemStatus.getJ(), 0);
         geometry.render();
 	}

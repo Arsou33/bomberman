@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.peekmoon.bomberman.Camera;
+import org.peekmoon.bomberman.model.Direction;
 import org.peekmoon.bomberman.network.CommandSender;
-import org.peekmoon.bomberman.network.Direction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

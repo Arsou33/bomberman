@@ -1,6 +1,6 @@
 package org.peekmoon.bomberman.board;
 
-import org.peekmoon.bomberman.network.status.GameStatus;
+import org.peekmoon.bomberman.model.Game;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class GameRenderer {
@@ -13,7 +13,7 @@ public class GameRenderer {
     	player = new PlayerRenderer(shader);
     }
 	
-	public void render(GameStatus game) {
+	public void render(Game game) {
 		board.render(game.getBoardStatus());
 		player.render(game.getPlayerStatus());
 	}

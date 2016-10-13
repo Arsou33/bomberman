@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.network;
+package org.peekmoon.bomberman.model;
 
 public enum Direction {
     UP,

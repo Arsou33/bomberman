@@ -2,7 +2,7 @@ package org.peekmoon.bomberman.network.command;
 
 import java.nio.ByteBuffer;
 
-import org.peekmoon.bomberman.network.Direction;
+import org.peekmoon.bomberman.model.Direction;
 
 public class PlayerStopMoveCommand extends Command {
     

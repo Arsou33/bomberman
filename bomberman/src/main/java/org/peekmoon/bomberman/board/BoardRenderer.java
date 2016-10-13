@@ -3,7 +3,7 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.Texture;
-import org.peekmoon.bomberman.network.status.BoardStatus;
+import org.peekmoon.bomberman.model.Board;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class BoardRenderer {
@@ -30,7 +30,7 @@ public class BoardRenderer {
         this.tileRenderer = new TileRenderer(shader);
     }
     
-    public void render(BoardStatus status) {
+    public void render(Board status) {
         for (int i=0; i<status.getWidth(); i++) {
             for (int j=0; j<status.getHeight(); j++) {
                 ground.setPosition(i, j, 0);

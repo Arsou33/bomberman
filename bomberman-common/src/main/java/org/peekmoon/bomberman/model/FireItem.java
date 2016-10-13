@@ -1,19 +1,19 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 
-public class FireItemStatus extends ItemStatus {
+public class FireItem extends Item {
 	
     private static final float lifeTime = 1.5f;
     private float countdown;
 
 	
-	public FireItemStatus(TileStatus tileStatus) {
+	public FireItem(Tile tileStatus) {
 		super(tileStatus);
 		countdown = lifeTime;
 	}
 	
-	public FireItemStatus(ByteBuffer buffer, TileStatus tileStatus) {
+	public FireItem(ByteBuffer buffer, Tile tileStatus) {
 		super(tileStatus);
 	}
 	

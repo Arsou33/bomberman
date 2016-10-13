@@ -1,21 +1,19 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 
-import org.peekmoon.bomberman.network.Direction;
-
-public class BombItemStatus extends ItemStatus {
+public class BombItem extends Item {
 	
     private static final float lifeTime = 4;
     private static final int power = 3;
     private float countdown;
 
-	public BombItemStatus(TileStatus tileStatus) {
+	public BombItem(Tile tileStatus) {
 		super(tileStatus);
         this.countdown = lifeTime;
 	}
 	
-	public BombItemStatus(ByteBuffer buffer, TileStatus tileStatus) {
+	public BombItem(ByteBuffer buffer, Tile tileStatus) {
 		super(tileStatus);
 	}
 	
@@ -32,7 +30,7 @@ public class BombItemStatus extends ItemStatus {
 	@Override
 	public boolean fire() {
 	    for (Direction direction : Direction.values()) {
-	        TileStatus currentTile = getTile();
+	        Tile currentTile = getTile();
 	        for (int i=0; i<power; i++) {
 	            currentTile = currentTile.get(direction);
 	            currentTile.fire();

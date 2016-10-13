@@ -1,18 +1,18 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 public enum ItemType {
-	BRICK(BrickItemStatus.class),
-	WOOD(WoodItemStatus.class),
-	BOMB(BombItemStatus.class),
-	FIRE(FireItemStatus.class);
+	BRICK(BrickItem.class),
+	WOOD(WoodItem.class),
+	BOMB(BombItem.class),
+	FIRE(FireItem.class);
 	
-	private Class<? extends ItemStatus> clazz;
+	private Class<? extends Item> clazz;
 
-	ItemType(Class<? extends ItemStatus> clazz) {
+	ItemType(Class<? extends Item> clazz) {
 		this.clazz = clazz;
 	}
 
-	public static ItemType get(Class<? extends ItemStatus> itemClass) {
+	public static ItemType get(Class<? extends Item> itemClass) {
 		for (ItemType itemType : ItemType.values()) {
 			if (itemType.clazz.equals(itemClass)) return itemType;
 		}
@@ -27,7 +27,7 @@ public enum ItemType {
 		return (byte) ordinal();
 	}
 
-	public Class<? extends ItemStatus> getItemClass() {
+	public Class<? extends Item> getItemClass() {
 		return clazz;
 	}
 	

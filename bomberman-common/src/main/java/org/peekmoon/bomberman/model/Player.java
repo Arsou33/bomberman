@@ -1,27 +1,25 @@
-package org.peekmoon.bomberman.network.status;
+package org.peekmoon.bomberman.model;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.peekmoon.bomberman.network.Direction;
 // TODO : Check if synchronized are necessary if yes put every where in xxxStatus
-public class PlayerStatus {
+public class Player {
 	
     private static final float speed = 0.1f;
     
-	private final BoardStatus board;
+	private final Board board;
     private float x,y;
     
     private final transient List<Direction> activeDirections = new LinkedList<>();
 
-    public PlayerStatus(BoardStatus board, ByteBuffer buffer) {
+    public Player(Board board, ByteBuffer buffer) {
     	this.board = board;
         x = buffer.getFloat();
         y = buffer.getFloat();
     }
     
-    public PlayerStatus(BoardStatus board) {
+    public Player(Board board) {
 		this.board = board;
 		x= y = 1;
 	}
@@ -41,7 +39,7 @@ public class PlayerStatus {
 
     private void moveUp() {
         if (Math.ceil(y) != Math.round(y)) { // We are entering a cell
-            TileStatus destTile = board.get(x, (float)Math.floor(y)).get(Direction.UP);
+            Tile destTile = board.get(x, (float)Math.floor(y)).get(Direction.UP);
             if (!destTile.isTraversable()) return;
         }
 
@@ -61,7 +59,7 @@ public class PlayerStatus {
     
     private void moveDown() {
         if (Math.floor(y) != Math.round(y)) { // We are entering a cell
-            TileStatus destTile = board.get(x, (float)Math.ceil(y)).get(Direction.DOWN);
+            Tile destTile = board.get(x, (float)Math.ceil(y)).get(Direction.DOWN);
             if (!destTile.isTraversable()) return;
         }
         
@@ -80,7 +78,7 @@ public class PlayerStatus {
 
     private void moveLeft() {
         if (Math.floor(x) != Math.round(x)) { // We are entering a cell
-            TileStatus destTile = board.get((float)Math.ceil(x), y).get(Direction.LEFT);
+            Tile destTile = board.get((float)Math.ceil(x), y).get(Direction.LEFT);
             if (!destTile.isTraversable()) return;
         }
         
@@ -99,7 +97,7 @@ public class PlayerStatus {
 
     private void moveRight() {
         if (Math.ceil(x) != Math.round(x)) { // We are entering a cell
-            TileStatus destTile = board.get((float)Math.floor(x), y).get(Direction.RIGHT);
+            Tile destTile = board.get((float)Math.floor(x), y).get(Direction.RIGHT);
             if (!destTile.isTraversable()) return;
         }        
         float distToMove = speed;
@@ -116,7 +114,7 @@ public class PlayerStatus {
     }
 
     public void dropBomb() {
-        TileStatus currentTile = board.get(x, y);
+        Tile currentTile = board.get(x, y);
         if (currentTile.canDropBomb()) {
             currentTile.dropBomb();
         }

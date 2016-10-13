@@ -1,8 +1,8 @@
 package org.peekmoon.bomberman.board;
 
-import org.peekmoon.bomberman.network.status.ItemStatus;
+import org.peekmoon.bomberman.model.Item;
 
-public abstract class ItemRenderer<T extends ItemStatus> {
+public abstract class ItemRenderer<T extends Item> {
     
     public abstract void render(T itemStatus);
 	public abstract void release();
