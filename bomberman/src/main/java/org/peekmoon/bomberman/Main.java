@@ -23,33 +23,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
-    
+
     private final static Logger log = LoggerFactory.getLogger(Main.class);
 
-	public static void main(String[] args) throws IOException, URISyntaxException  {
-		log.info("Bomberman starting...");
-		new Main().start();
-		log.info("Bomberman finished...");
-	}
-	
-	private long window;
-	private GLFWErrorCallback errorCallback;
-	
-	private DatagramSocket socket;
-	
-	private GameRenderer gameRenderer;
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        log.info("Bomberman starting...");
+        new Main().start();
+        log.info("Bomberman finished...");
+    }
+
+    private long window;
+    private GLFWErrorCallback errorCallback;
+
+    private DatagramSocket socket;
+
+    private GameRenderer gameRenderer;
     private Camera camera;
-    
+
     private void start() throws IOException, URISyntaxException {
         initOpenGlWindow();
-        
+
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
         shader.use();
-        
+
         gameRenderer = new GameRenderer(shader);
-        
+        FpsRenderer fpsRenderer = new FpsRenderer();
+
         camera = new Camera(shader);
-        
+
         socket = new DatagramSocket(); // Bound to an ephemeral port
         CommandSender commandSender = new CommandSender(socket);
         commandSender.register();
@@ -60,7 +61,7 @@ public class Main {
         statusReceiverThread.start();
         KeyManager keyManager = new KeyManager(window, commandSender, camera);
         glfwSetKeyCallback(window, keyManager);
-        
+
         double lastTime = glfwGetTime();
         double timeToStat = 1;
         int nbFrame = 0;
@@ -71,54 +72,55 @@ public class Main {
             timeToStat -= elapsed;
             nbFrame++;
             if (timeToStat < 0) {
-                log.debug("FPS : {}", nbFrame/15);
+                log.debug("FPS : {}", nbFrame / 15);
                 nbFrame = 0;
-                timeToStat=15;
+                timeToStat = 15;
             }
-            
+
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             camera.update();
             keyManager.update(elapsed);
-            
+
             gameRenderer.render(statusReceiver.getStatus());
+            fpsRenderer.render();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
-        
-        release();        
+
+        release();
 
     }
 
     private void initOpenGlWindow() {
-        errorCallback = GLFWErrorCallback.create((error, description) -> log.error(
-                "LWJGL Error - Code: {}, Description: {}",
-                Integer.toHexString(error),
-                GLFWErrorCallback.getDescription(description)));
+        errorCallback = GLFWErrorCallback.create(
+                (error, description) -> log.error("LWJGL Error - Code: {}, Description: {}",
+                Integer.toHexString(error), 
+                GLFWErrorCallback.getDescription(description))
+        );
         glfwSetErrorCallback(errorCallback);
-        
+
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
-        
+
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        
-        
+
         window = glfwCreateWindow(896, 504, "Simple example", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to create the GLFW window");
         }
-        
+
         glfwSetWindowAspectRatio(window, 16, 9);
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
         glfwMakeContextCurrent(window);
-        //glfwSwapInterval(1);
+        // glfwSwapInterval(1);
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -132,5 +134,5 @@ public class Main {
         glfwTerminate();
         errorCallback.free();
     }
-    
+
 }

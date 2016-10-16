@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman;
+package org.peekmoon.bomberman.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -9,11 +9,11 @@ import java.nio.ByteBuffer;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
-public class Texture {
+public class GLTexture {
     
     private int id;
     
-    public Texture(String texture) {
+    public GLTexture(String texture) {
         try (InputStream in = getClass().getResourceAsStream("/texture/" + texture)) {
                PNGDecoder decoder = new PNGDecoder(in);
                ByteBuffer buf = ByteBuffer.allocateDirect(4*decoder.getWidth()*decoder.getHeight());

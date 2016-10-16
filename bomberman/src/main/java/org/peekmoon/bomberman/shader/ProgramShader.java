@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL20.*;
 
 
 import org.joml.Matrix4f;
-import org.peekmoon.bomberman.GLUtils;
+import org.peekmoon.bomberman.opengl.GLUtils;
 
 public class ProgramShader implements ProgramProjectionView, ModelMatrix {
     

@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman;
+package org.peekmoon.bomberman.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;

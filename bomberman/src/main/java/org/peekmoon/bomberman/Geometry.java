@@ -1,16 +1,17 @@
 package org.peekmoon.bomberman;
 
 import org.joml.Matrix4f;
+import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.shader.ModelMatrix;
 
 public class Geometry {
     
-    private Mesh mesh;
+    private GLMesh mesh;
     private ModelMatrix modelMatrix;
     private Matrix4f transformation;
     
     
-    public Geometry(Mesh mesh, ModelMatrix modelMatrix) {
+    public Geometry(GLMesh mesh, ModelMatrix modelMatrix) {
         this.mesh = mesh;
         this.modelMatrix = modelMatrix;
         transformation = new Matrix4f();

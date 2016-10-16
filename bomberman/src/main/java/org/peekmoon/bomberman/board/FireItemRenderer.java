@@ -2,14 +2,15 @@ package org.peekmoon.bomberman.board;
 
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
-import org.peekmoon.bomberman.Texture;
 import org.peekmoon.bomberman.model.FireItem;
+import org.peekmoon.bomberman.opengl.GLMesh;
+import org.peekmoon.bomberman.opengl.GLTexture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class FireItemRenderer extends ItemRenderer<FireItem> {
     
-    private final Texture fireTexture = new Texture("test.png");
-    private final Mesh fireMesh = Mesh.get("cube", fireTexture);
+    private final GLTexture fireTexture = new GLTexture("test.png");
+    private final GLMesh fireMesh = new GLMesh(Mesh.get("cube"), fireTexture);
 
     private final Geometry geometry; 
 

@@ -10,7 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.peekmoon.bomberman.GLUtils;
+import org.peekmoon.bomberman.opengl.GLUtils;
+
 
 public abstract class Shader {
     

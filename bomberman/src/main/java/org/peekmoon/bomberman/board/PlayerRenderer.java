@@ -2,19 +2,20 @@ package org.peekmoon.bomberman.board;
 
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
-import org.peekmoon.bomberman.Texture;
 import org.peekmoon.bomberman.model.Player;
+import org.peekmoon.bomberman.opengl.GLMesh;
+import org.peekmoon.bomberman.opengl.GLTexture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class PlayerRenderer {
     
     private final Geometry geometry;
-    private final Mesh cowboyMesh;
-    private final Texture cowboyTexture;
+    private final GLMesh cowboyMesh;
+    private final GLTexture cowboyTexture;
     
     public PlayerRenderer(ProgramShader shader) {
-        cowboyTexture = new Texture("cowboy.png");
-        cowboyMesh = Mesh.get("cowboy", cowboyTexture);
+        cowboyTexture = new GLTexture("cowboy.png");
+        cowboyMesh = new GLMesh(Mesh.get("cowboy"), cowboyTexture);
         geometry = new Geometry(cowboyMesh, shader);
     }
     
