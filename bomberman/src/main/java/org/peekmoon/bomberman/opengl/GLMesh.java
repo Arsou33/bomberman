@@ -2,10 +2,7 @@ package org.peekmoon.bomberman.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_SHORT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -13,6 +10,7 @@ import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -21,76 +19,93 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-import org.peekmoon.bomberman.Mesh;
-
 public class GLMesh {
     
     private final int vboId;
-    private final int iboId;
     private final int vaoId;
     private GLTexture texture;
-    private final int nbIndices;
     
-    public GLMesh(Mesh mesh, GLTexture texture) {
+    public GLMesh(float[] vertices, GLTexture texture, int...  attribSizes) {
+        GLUtils.checkError("Open GL Error before mesh creation");
         this.texture = texture;
-        this.nbIndices = mesh.getIndices().length;
-        
-        GLUtils.checkError("Init start failed");
-        
+
         // Generate, bind and fill vertex buffer object
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, mesh.getVertices(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
         GLUtils.checkError("Unable to fill vertex buffer");
-        
+
         // Generate and bind vertex array
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 5*4, 0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 5*4, 3*4);
+        
+        int stride = 0;
+        for (int size : attribSizes) {
+            stride += size;
+        }
+        int floatSize = 4;
+        int currentOffset = 0;
+        for (int iAttrib = 0; iAttrib<attribSizes.length; iAttrib++) {
+            glVertexAttribPointer(iAttrib, attribSizes[iAttrib], GL_FLOAT, false, stride*floatSize, currentOffset);
+            currentOffset+=attribSizes[iAttrib]*floatSize;
+        }
         GLUtils.checkError("Unable to create vertex array");
         
         // Unbind buffer object and vertex array
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-        
-        // Generate indices buffer object
-        iboId = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.getIndices(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        GLUtils.checkError("Unable to generate indice BO");
-
-
-        GLUtils.checkError("Unable to init object");
     }
     
     public void draw() {
+        bind();
+        internalDraw();
+        unbind();
+    }
+    
+    /**
+     * Update vertices in the vbo buffer
+     * Use buffer respecification as : https://www.opengl.org/wiki/Buffer_Object_Streaming#Buffer_re-specification
+     * @param vertices
+     */
+    public void updateVertices(float[] vertices) {
+        GLUtils.checkError();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER,(long)(vertices.length << 2), GL_STATIC_DRAW); 
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices); // TODO : Compare with a glMapBuffer ou glMapBufferRange
+        GLUtils.checkError();
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        GLUtils.checkError("Unable to update vertices");
+
+    }
+
+    public void release() {
+        glDeleteBuffers(vboId);
+    }
+
+    protected void bind() {
+        GLUtils.checkError();
         // Texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture.getId());
         
         // Vertex array
         glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0); // TODO : Parametre en fonction du nombre d'attributs
         glEnableVertexAttribArray(1);
-        
-        // IBO
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
-        glDrawElements(GL_TRIANGLES, nbIndices, GL_UNSIGNED_SHORT, 0);
-        
+        GLUtils.checkError("Unable to bindBuffer");
+    }
+    
+    protected void internalDraw() {
+        //TODO : Internal draw without ibo
+    }
+    
+    protected void unbind() {
         // Deselect everything
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
-        
-        GLUtils.checkError("draw");
-    }
-
-    public void release() {
-        glDeleteBuffers(vboId);
-        glDeleteBuffers(iboId);
     }
 
 }

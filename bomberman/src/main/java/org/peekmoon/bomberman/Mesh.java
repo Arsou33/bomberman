@@ -21,13 +21,6 @@ public class Mesh implements Serializable {
         }
     }
     
-    public static Mesh get(float[] vertices, short[] indices) {
-        Mesh mesh = new Mesh();
-        mesh.setVertices(vertices);
-        mesh.setIndices(indices);
-        return mesh;
-    }
-    
     public void setVertices(float[] vertices) {
         this.vertices = vertices;
     }

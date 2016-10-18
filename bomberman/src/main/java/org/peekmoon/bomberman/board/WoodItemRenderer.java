@@ -3,6 +3,7 @@ package org.peekmoon.bomberman.board;
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.model.WoodItem;
+import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
 import org.peekmoon.bomberman.shader.ProgramShader;
@@ -10,7 +11,7 @@ import org.peekmoon.bomberman.shader.ProgramShader;
 public class WoodItemRenderer extends ItemRenderer<WoodItem> {
 
     private static final GLTexture woodTexture = new GLTexture("wood-box.png");
-    private static final GLMesh woodBoxMesh = new GLMesh(Mesh.get("cube"), woodTexture);
+    private static final GLMesh woodBoxMesh = new GLIndexedMesh(Mesh.get("cube"), woodTexture);
 
     private final Geometry geometry;
 

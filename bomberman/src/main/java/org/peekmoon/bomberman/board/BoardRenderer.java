@@ -1,16 +1,15 @@
 package org.peekmoon.bomberman.board;
 
 import org.peekmoon.bomberman.Geometry;
-import org.peekmoon.bomberman.Mesh;
 import org.peekmoon.bomberman.model.Board;
-import org.peekmoon.bomberman.opengl.GLMesh;
+import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
 import org.peekmoon.bomberman.shader.ProgramShader;
 
 public class BoardRenderer {
 
     private final TileRenderer tileRenderer;
-    private final GLMesh groundMesh;
+    private final GLIndexedMesh groundMesh;
     private final GLTexture grassTexture;
     private final Geometry ground;
 
@@ -18,14 +17,15 @@ public class BoardRenderer {
     public BoardRenderer(ProgramShader shader) {
         this.grassTexture = new GLTexture("grass.png");
         
-        groundMesh = new GLMesh(Mesh.get(new float[] {
+        groundMesh = new GLIndexedMesh(new float[] {
                 -0.5f,-0.5f,0, 0,1, 
                 0.5f,-0.5f,0,  1,1,
                 -0.5f,0.5f,0,  0,0, 
                 0.5f,0.5f,0,   1,0
             }, 
-            new short[] {0,1,2, 1,2,3}),
-            grassTexture
+            new short[] {0,1,2, 1,2,3},
+            grassTexture,
+            3, 2
         );
         
         ground = new Geometry(groundMesh, shader);

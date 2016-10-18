@@ -14,7 +14,7 @@ public class ProgramShader implements ProgramProjectionView, ModelMatrix {
     int projectionMatrixUniform;
     int modelMatrixUniform;
     
-    
+    // TODO : Generalize uniform by name or enum
     public ProgramShader(VertexShader vs, FragmentShader fs) {
         programShader = glCreateProgram();
         if (programShader == 0) throw new IllegalStateException();

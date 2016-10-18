@@ -31,7 +31,6 @@ public class Camera {
     
     public void update() {
         programProjectionView.setProjection(projection);
-
         updateView();
         programProjectionView.setView(view);
     }
