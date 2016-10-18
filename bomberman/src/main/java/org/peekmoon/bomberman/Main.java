@@ -16,6 +16,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowAspectRatio;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
@@ -160,7 +161,7 @@ public class Main {
         glfwSetWindowAspectRatio(window, 16, 9);
         glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
         glfwMakeContextCurrent(window);
-        // glfwSwapInterval(1);
+        glfwSwapInterval(0);
         GL.createCapabilities();
         glDepthFunc(GL_LESS);
     }
