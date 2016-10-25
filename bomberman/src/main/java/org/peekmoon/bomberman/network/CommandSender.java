@@ -13,28 +13,32 @@ import org.peekmoon.bomberman.network.command.PlayerDropBombCommand;
 import org.peekmoon.bomberman.network.command.PlayerStartMoveCommand;
 import org.peekmoon.bomberman.network.command.PlayerStopMoveCommand;
 import org.peekmoon.bomberman.network.command.RegisterCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommandSender {
     
-    private static final InetAddress server;
+    private final static Logger log = LoggerFactory.getLogger(CommandSender.class);
+
+    
+    private final InetAddress server;
+    private final int port;
     private final DatagramSocket socket; 
     private final ByteBuffer buffer;
     
-    static {
-        String servername = "localhost";
+    public CommandSender(DatagramSocket socket, String servername, int port) {
         try {
-            server = InetAddress.getByName(servername);
+            this.socket = socket;
+            this.buffer = ByteBuffer.allocate(1000);
+            this.server = InetAddress.getByName(servername);
+            this.port = port;
         } catch (UnknownHostException  e) {
             throw new IllegalArgumentException(servername, e);
         }
     }
     
-    public CommandSender(DatagramSocket socket) {
-        this.socket = socket;
-        this.buffer = ByteBuffer.allocate(1000);
-    }
-    
     public void register() {
+        log.debug("Trying to register on server {}:{}", server.getHostAddress(), port);
         send(new RegisterCommand());
     }
     
@@ -55,7 +59,7 @@ public class CommandSender {
             buffer.clear();
             command.fill(buffer);
             buffer.flip();
-            DatagramPacket commandPacket = new DatagramPacket(buffer.array(),buffer.limit(),server,8232); 
+            DatagramPacket commandPacket = new DatagramPacket(buffer.array(),buffer.limit(),server,port); 
             socket.send(commandPacket);
         } catch (IOException e) {
             throw new IllegalStateException(e);

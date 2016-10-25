@@ -28,7 +28,20 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         log.info("Bomberman starting...");
-        new Main().start();
+        String server = "localhost";
+        int port = 8232;
+        for (int i=0; i<args.length; i++) {
+            switch (args[i]) {
+                case "-server" :
+                    if (args[i+1].startsWith("-")) throw new IllegalArgumentException("Server can't start by -");
+                    server = args[++i];
+                    break;
+                case "-port" :
+                    port = Integer.parseInt(args[++i]);
+                    break;
+            }
+        }
+        new Main().start(server, port);
         log.info("Bomberman finished...");
     }
 
@@ -40,7 +53,7 @@ public class Main {
     private GameRenderer gameRenderer;
     private Camera camera;
 
-    private void start() throws IOException, URISyntaxException {
+    private void start(String server, int port) throws IOException, URISyntaxException {
         initOpenGlWindow();
 
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
@@ -52,7 +65,7 @@ public class Main {
         camera = new Camera(shader);
 
         socket = new DatagramSocket(); // Bound to an ephemeral port
-        CommandSender commandSender = new CommandSender(socket);
+        CommandSender commandSender = new CommandSender(socket, server, port);
         commandSender.register();
         StatusReceiver statusReceiver = new StatusReceiver(socket);
         statusReceiver.next();
