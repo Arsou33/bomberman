@@ -1,6 +1,9 @@
 
+apply plugin: 'application'
+
+mainClassName = "org.peekmoon.bomberman.server.MainServer"
 
 dependencies {
     compile project(':bomberman-common')
-  
 }
+
