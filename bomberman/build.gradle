@@ -1,4 +1,8 @@
 
+apply plugin: 'application'
+
+mainClassName = "org.peekmoon.bomberman.Main"
+
 repositories {
   maven {
     url "http://4thline.org/m2"
