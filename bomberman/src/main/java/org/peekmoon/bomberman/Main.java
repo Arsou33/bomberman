@@ -25,12 +25,16 @@ import org.peekmoon.bomberman.shader.ProgramShader;
 import org.peekmoon.bomberman.shader.VertexShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class Main {
 
     private final static Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
+        // Redirect JUL log to slf4j (cling use jul)
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
         log.info("Bomberman starting...");
         String server = "localhost";
         int port = 8232;
