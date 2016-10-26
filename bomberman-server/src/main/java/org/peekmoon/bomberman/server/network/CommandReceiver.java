@@ -35,6 +35,7 @@ public class CommandReceiver implements Runnable {
     
     @Override
     public void run() {
+        log.info("Start waiting on port " + port);
         try (DatagramSocket socket = new DatagramSocket(port)) {
             while (true) {
                 socket.receive(data);

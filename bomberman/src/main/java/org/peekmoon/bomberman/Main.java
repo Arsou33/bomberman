@@ -6,8 +6,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
 
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.support.igd.PortMappingListener;
+import org.fourthline.cling.support.model.PortMapping;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -65,6 +69,12 @@ public class Main {
         camera = new Camera(shader);
 
         socket = new DatagramSocket(); // Bound to an ephemeral port
+        
+        // Open port on nat
+        PortMapping portMapping = new PortMapping(socket.getLocalPort(), InetAddress.getLocalHost().getHostAddress(), PortMapping.Protocol.UDP,"My Port Mapping2");
+        UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(portMapping));
+        upnpService.getControlPoint().search();     
+        
         CommandSender commandSender = new CommandSender(socket, server, port);
         commandSender.register();
         StatusReceiver statusReceiver = new StatusReceiver(socket);
