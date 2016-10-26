@@ -13,19 +13,19 @@ public class GameEngine {
 		this.game = new Game();
 	}
 	
-	public void apply(int idPlayer, Command command) {
+	public void apply(int noPlayer, Command command) {
         // TODO : Use polymorphism to apply instead of instanceof
         switch (command.getType()) {
         case PLAYER_DROP_BOMB:
-            game.dropBomb(idPlayer);
+            game.dropBomb(noPlayer);
             break;
         case PLAYER_START_MOVE:
             PlayerStartMoveCommand playerStartMoveCommand = (PlayerStartMoveCommand)command;
-            game.startMove(idPlayer, playerStartMoveCommand.getDirection());
+            game.startMove(noPlayer, playerStartMoveCommand.getDirection());
             break;
         case PLAYER_STOP_MOVE:
         	PlayerStopMoveCommand playerStopMoveCommand = (PlayerStopMoveCommand)command;
-        	game.stopMove(idPlayer, playerStopMoveCommand.getDirection());
+        	game.stopMove(noPlayer, playerStopMoveCommand.getDirection());
             break;
         default:
             throw new IllegalStateException("Unknown type " + command.getType());

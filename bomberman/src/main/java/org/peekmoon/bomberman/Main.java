@@ -45,6 +45,7 @@ public class Main {
                     break;
             }
         }
+        Thread.setDefaultUncaughtExceptionHandler((thread, ex)->log.error("thread " + thread.getName() + " throw exception", ex));
         new Main().start(server, port);
         log.info("Bomberman finished...");
     }
@@ -70,7 +71,7 @@ public class Main {
 
         socket = new DatagramSocket(); // Bound to an ephemeral port
         
-        // Open port on nat
+        // Open ephemeral port on nat
         PortMapping portMapping = new PortMapping(socket.getLocalPort(), InetAddress.getLocalHost().getHostAddress(), PortMapping.Protocol.UDP,"My Port Mapping2");
         UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(portMapping));
         upnpService.getControlPoint().search();     
