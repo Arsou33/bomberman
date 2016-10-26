@@ -35,6 +35,7 @@ public class Main {
         // Redirect JUL log to slf4j (cling use jul)
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
+        
         log.info("Bomberman starting...");
         String server = "localhost";
         int port = 8232;
@@ -62,7 +63,7 @@ public class Main {
     private GameRenderer gameRenderer;
     private Camera camera;
 
-    private void start(String server, int port) throws IOException, URISyntaxException {
+    private void start(String server, int port) throws IOException, URISyntaxException, InterruptedException {
         initOpenGlWindow();
 
         ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
@@ -76,7 +77,10 @@ public class Main {
         socket = new DatagramSocket(); // Bound to an ephemeral port
         
         // Open ephemeral port on nat
-        PortMapping portMapping = new PortMapping(socket.getLocalPort(), InetAddress.getLocalHost().getHostAddress(), PortMapping.Protocol.UDP,"My Port Mapping2");
+        String localAddress = InetAddress.getLocalHost().getHostAddress();
+        int localPort = socket.getLocalPort();
+        log.info("Create port mapping for {}:{} ", localAddress, localPort);
+        PortMapping portMapping = new PortMapping(localPort, localAddress, PortMapping.Protocol.UDP, "Bomberman port mapping");
         UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(portMapping));
         upnpService.getControlPoint().search();     
         
@@ -116,7 +120,12 @@ public class Main {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
-
+        
+        log.info("Stopping statusReceiver");
+        statusReceiver.stop();
+        statusReceiverThread.join();
+        log.info("Stopping upnpService");
+        upnpService.shutdown();
         release();
 
     }
