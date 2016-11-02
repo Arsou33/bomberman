@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 
 import org.peekmoon.bomberman.network.command.Command;
-import org.peekmoon.bomberman.network.command.CommandType;
+import org.peekmoon.bomberman.network.command.PingCommand;
 import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.peekmoon.bomberman.server.network.CommandReceiver;
 import org.peekmoon.bomberman.server.network.StatusSender;
@@ -37,10 +37,19 @@ public class MainServer {
                 waitTick(lastTick);
                 lastTick = System.currentTimeMillis();
                 for (Command command : receiver.next()) {
-                    if (command.getType() == CommandType.REGISTER) {
+                    switch (command.getType()) {
+                    case REGISTER:
                         clients.register((RegisterCommand) command);
-                    } else {
-                        engine.apply(clients.getId(command), command);
+                        break;
+                    case PING:
+                        clients.apply((PingCommand)command);
+                        break;
+                    default:
+                        Client client = clients.getClient(command);
+                        if (client.isPlayer()) {
+                            engine.apply(client.getNoPlayer(), command);
+                        }
+                        break;
                     }
                 }
                 ;

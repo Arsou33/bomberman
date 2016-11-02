@@ -2,6 +2,8 @@ package org.peekmoon.bomberman.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.time.Duration;
+import java.time.Instant;
 
 import org.peekmoon.bomberman.network.command.Command;
 import org.peekmoon.bomberman.network.command.RegisterCommand;
@@ -16,13 +18,17 @@ public class Client {
     private final StatusSender statusSender;
     private final InetAddress address;
     private final int port;
+    private final int noPlayer;
     
     private boolean living = true;
+    private Instant lastSeen;
 
-    public Client(RegisterCommand registerCommand, StatusSender statusSender) {
+    public Client(RegisterCommand registerCommand, StatusSender statusSender, int noPlayer) {
         this.address = registerCommand.getAddress();
         this.port = registerCommand.getPort();
         this.statusSender = statusSender;
+        this.noPlayer = noPlayer;
+        this.lastSeen = Instant.now();
     }
 
     public void sendStatus()  {
@@ -49,7 +55,23 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client [address=" + address + ", port=" + port + "]";
+        return "Client [noPlayer=" + noPlayer + ", address=" + address + ", port=" + port + "]";
+    }
+
+    public boolean isPlayer() {
+        return noPlayer != -1;
+    }
+
+    public int getNoPlayer() {
+        return noPlayer;
+    }
+
+    public void refresh() {
+        lastSeen = Instant.now();
+    }
+
+    public boolean notSeen(Duration ofSeconds) {
+        return Instant.now().isAfter(lastSeen.plus(ofSeconds));
     }
 
 }

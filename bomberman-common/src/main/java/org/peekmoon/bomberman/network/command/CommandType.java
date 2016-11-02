@@ -3,6 +3,7 @@ package org.peekmoon.bomberman.network.command;
 public enum CommandType {
     
     REGISTER(RegisterCommand.class),
+    PING(PingCommand.class),
     PLAYER_START_MOVE(PlayerStartMoveCommand.class),
     PLAYER_STOP_MOVE(PlayerStopMoveCommand.class),
     PLAYER_DROP_BOMB(PlayerDropBombCommand.class);

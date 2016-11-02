@@ -20,6 +20,7 @@ public class StatusReceiver implements Runnable {
     private final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
     private final DatagramPacket data = new DatagramPacket(byteBuffer.array(), bufferSize);
     
+    private boolean running;
     private Game status;
     
     public StatusReceiver(DatagramSocket socket) {
@@ -29,11 +30,10 @@ public class StatusReceiver implements Runnable {
     @Override
     public void run() {
         log.info("Sarting status receiver...");
-        // TODO : Add port to configuration
-        while (true) {
+        while (running) {
              next();
         }        
-        //log.info("Finish status receiver");
+        log.info("Status receiver stopped");
     }
     
     public void next() {
@@ -49,6 +49,10 @@ public class StatusReceiver implements Runnable {
     
     public Game getStatus() {
         return status;
+    }
+
+    public void stop() {
+        running = false;
     }
 
 }
