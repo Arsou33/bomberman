@@ -5,7 +5,7 @@ import org.peekmoon.bomberman.model.BrickItem;
 import org.peekmoon.bomberman.model.FireItem;
 import org.peekmoon.bomberman.model.Item;
 import org.peekmoon.bomberman.model.WoodItem;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
 
 public class ItemRenderers {
 	
@@ -15,7 +15,7 @@ public class ItemRenderers {
 	private final FireItemRenderer fireItemRenderer;
 
 	
-    public ItemRenderers(ProgramShader shader) {
+    public ItemRenderers(BombermanShader shader) {
     	brickItemRenderer = new BrickItemRenderer(shader);
     	woodItemRenderer = new WoodItemRenderer(shader);
     	bombItemRenderer = new BombItemRenderer(shader);

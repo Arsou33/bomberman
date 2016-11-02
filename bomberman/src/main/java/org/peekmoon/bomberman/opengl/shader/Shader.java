@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.shader;
+package org.peekmoon.bomberman.opengl.shader;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;

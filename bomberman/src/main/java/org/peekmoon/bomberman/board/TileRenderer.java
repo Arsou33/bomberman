@@ -1,13 +1,13 @@
 package org.peekmoon.bomberman.board;
 
 import org.peekmoon.bomberman.model.Tile;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
 
 public class TileRenderer {
 	
 	private final ItemRenderers itemRenderers;
     
-    public TileRenderer(ProgramShader shader) {
+    public TileRenderer(BombermanShader shader) {
     	itemRenderers = new ItemRenderers(shader);
     }
     

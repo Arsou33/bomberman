@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.TextShader;
 
 public class FpsRenderer {
 
@@ -41,7 +41,7 @@ public class FpsRenderer {
     private int nbFrame = 0;
     private double fps = 0;
 
-    public FpsRenderer(ProgramShader shader) {
+    public FpsRenderer(TextShader shader) {
 
         try {
             

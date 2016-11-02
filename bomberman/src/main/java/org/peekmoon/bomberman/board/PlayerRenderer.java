@@ -6,7 +6,7 @@ import org.peekmoon.bomberman.model.Player;
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
 
 public class PlayerRenderer {
     
@@ -14,7 +14,7 @@ public class PlayerRenderer {
     private final GLMesh cowboyMesh;
     private final GLTexture cowboyTexture;
     
-    public PlayerRenderer(ProgramShader shader) {
+    public PlayerRenderer(BombermanShader shader) {
         cowboyTexture = new GLTexture("cowboy.png");
         cowboyMesh = new GLIndexedMesh(Mesh.get("cowboy"), cowboyTexture);
         geometry = new Geometry(cowboyMesh, shader);

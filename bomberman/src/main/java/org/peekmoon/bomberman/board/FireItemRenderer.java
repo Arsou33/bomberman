@@ -6,7 +6,7 @@ import org.peekmoon.bomberman.model.FireItem;
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
 
 public class FireItemRenderer extends ItemRenderer<FireItem> {
     
@@ -15,7 +15,7 @@ public class FireItemRenderer extends ItemRenderer<FireItem> {
 
     private final Geometry geometry; 
 
-    public FireItemRenderer(ProgramShader shader) {
+    public FireItemRenderer(BombermanShader shader) {
         geometry = new Geometry(fireMesh, shader);
     }
 

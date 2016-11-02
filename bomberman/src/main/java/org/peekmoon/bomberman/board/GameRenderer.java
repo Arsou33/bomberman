@@ -1,14 +1,14 @@
 package org.peekmoon.bomberman.board;
 
 import org.peekmoon.bomberman.model.Game;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
 
 public class GameRenderer {
 	
     private BoardRenderer boardRenderer;
     private PlayerRenderer playerRenderer;
     
-    public GameRenderer(ProgramShader shader) {
+    public GameRenderer(BombermanShader shader) {
     	boardRenderer = new BoardRenderer(shader);
     	playerRenderer = new PlayerRenderer(shader);
     }

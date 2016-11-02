@@ -1,7 +1,35 @@
 package org.peekmoon.bomberman;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowAspectRatio;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LESS;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.IOException;
@@ -16,9 +44,8 @@ import org.peekmoon.bomberman.key.KeyManager;
 import org.peekmoon.bomberman.network.CommandSender;
 import org.peekmoon.bomberman.network.StatusReceiver;
 import org.peekmoon.bomberman.opengl.GLUtils;
-import org.peekmoon.bomberman.shader.FragmentShader;
-import org.peekmoon.bomberman.shader.ProgramShader;
-import org.peekmoon.bomberman.shader.VertexShader;
+import org.peekmoon.bomberman.shader.BombermanShader;
+import org.peekmoon.bomberman.shader.TextShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +83,8 @@ public class Main {
     private void start(String server, int port) throws IOException, URISyntaxException {
         initOpenGlWindow();
 
-        ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
-        ProgramShader textShader = new ProgramShader(new VertexShader("text"), new FragmentShader("text"));
+        BombermanShader shader = new BombermanShader();
+        TextShader textShader = new TextShader();
 
         gameRenderer = new GameRenderer(shader);
         FpsRenderer fpsRenderer = new FpsRenderer(textShader);
