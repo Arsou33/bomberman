@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.board;
+package org.peekmoon.bomberman.board.renderer;
 
 import org.peekmoon.bomberman.model.Item;
 

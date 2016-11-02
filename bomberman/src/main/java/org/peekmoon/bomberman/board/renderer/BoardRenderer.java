@@ -1,10 +1,10 @@
-package org.peekmoon.bomberman.board;
+package org.peekmoon.bomberman.board.renderer;
 
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.model.Board;
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.BombermanShader;
+import org.peekmoon.bomberman.shader.BoardShader;
 
 public class BoardRenderer {
 
@@ -14,7 +14,7 @@ public class BoardRenderer {
     private final Geometry ground;
 
     
-    public BoardRenderer(BombermanShader shader) {
+    public BoardRenderer(BoardShader shader) {
         this.grassTexture = new GLTexture("grass.png");
         
         groundMesh = new GLIndexedMesh(new float[] {

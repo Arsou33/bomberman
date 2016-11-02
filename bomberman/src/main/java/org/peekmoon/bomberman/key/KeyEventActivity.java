@@ -12,8 +12,8 @@ public class KeyEventActivity {
         this.activity = activity;
     }
     
-    public void fire(float elapsed) {
-        activity.fire(elapsed);
+    public void fire() {
+        activity.fire();
     }
 
     public boolean isTriggerState(int action) {

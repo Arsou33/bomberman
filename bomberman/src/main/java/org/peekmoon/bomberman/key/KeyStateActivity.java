@@ -17,8 +17,8 @@ public class KeyStateActivity {
         this.activity = activity;
     }
     
-    public void update(float elapsed) {
-        if (isKeyPressed() && isModOk()) activity.fire(elapsed);
+    public void update() {
+        if (isKeyPressed() && isModOk()) activity.fire();
     }
 
     private boolean isKeyPressed() {

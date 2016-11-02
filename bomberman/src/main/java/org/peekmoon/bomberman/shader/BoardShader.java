@@ -3,14 +3,14 @@ package org.peekmoon.bomberman.shader;
 import org.joml.Matrix4f;
 import org.peekmoon.bomberman.opengl.shader.ProgramShader;
 
-public class BombermanShader extends ProgramShader implements ModelMatrix, ProgramProjectionView {
+public class BoardShader extends ProgramShader implements ModelMatrix, ProgramProjectionView {
     
     
     private final int viewMatrixUniform;
     private final int projectionMatrixUniform;
     private final int modelMatrixUniform;
     
-    public BombermanShader() {
+    public BoardShader() {
         super("shader");
         projectionMatrixUniform = getUniformLocation("projectionMatrix");
         viewMatrixUniform = getUniformLocation("viewMatrix");

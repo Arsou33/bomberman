@@ -1,6 +1,9 @@
 package org.peekmoon.bomberman;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -124,6 +127,9 @@ public class FpsRenderer {
         String string = String.format("FPS : %04.0f", fps);
         
         float x = 0.01f;
+        glDisable(GL_DEPTH_TEST);
+
+        
         for (char c : string.toCharArray()) {
             int noChar = (int)c;
             int ligne = noChar / (1024 / charWidth);
@@ -144,6 +150,8 @@ public class FpsRenderer {
             mesh.updateVertices(vertices);
             mesh.draw();            
         }
+        
+        glEnable(GL_DEPTH_TEST);
         
     }
 
