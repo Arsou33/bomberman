@@ -40,7 +40,7 @@ import org.fourthline.cling.support.model.PortMapping;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.peekmoon.bomberman.board.BoardStage;
+import org.peekmoon.bomberman.Stage.Name;
 import org.peekmoon.bomberman.opengl.GLUtils;
 import org.peekmoon.bomberman.shader.TextShader;
 import org.slf4j.Logger;
@@ -86,8 +86,8 @@ public class Main {
         initOpenGlWindow();
 
         TextShader textShader = new TextShader();
-
-        FpsRenderer fpsRenderer = new FpsRenderer(textShader);
+        TextRenderer textRenderer = new TextRenderer();
+        FpsRenderer fpsRenderer = new FpsRenderer(textRenderer);
 
         socket = new DatagramSocket(); // Bound to an ephemeral port
         
@@ -100,9 +100,12 @@ public class Main {
         upnpService.getControlPoint().search();     
         
         
-        Stage boardStage = new BoardStage(window, socket, server, port);
-        boardStage.init();
-        glfwSetKeyCallback(window, boardStage.getKeyManager());
+        StageFactory stageFactory = new StageFactory(window, socket, server, port, textRenderer);
+        //Stage menuStage = new MenuStage(window, textRenderer);
+        //Stage boardStage = new BoardStage(window, socket, server, port);
+        Stage currentStage = stageFactory.get(Name.MENU);
+        currentStage.init();
+        glfwSetKeyCallback(window, currentStage.getKeyManager());
 
         while (!glfwWindowShouldClose(window)) {
 
@@ -110,9 +113,16 @@ public class Main {
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            boardStage.getKeyManager().update(); 
-            boardStage.render();
-
+            currentStage.getKeyManager().update(); 
+            currentStage.render();
+            Name nextStageName = currentStage.next();
+            if (!currentStage.is(nextStageName)) {
+                currentStage.release();
+                currentStage = stageFactory.get(nextStageName);
+                currentStage.init();
+                glfwSetKeyCallback(window, currentStage.getKeyManager());
+            }
+            
             textShader.use();
             fpsRenderer.render();
 
@@ -120,9 +130,11 @@ public class Main {
             glfwPollEvents();
         }
         
-        boardStage.release();
+        log.info("Releasing resources...");
+        currentStage.release();
+        textRenderer.release();
 
-        log.info("Stopping upnpService");
+        log.info("Stopping upnpService...");
         upnpService.shutdown();
         release();
 

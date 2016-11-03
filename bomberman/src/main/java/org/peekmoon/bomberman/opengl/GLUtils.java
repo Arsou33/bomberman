@@ -51,7 +51,7 @@ public class GLUtils {
         
         @Override
         public String toString() {
-            return String.format("[%s(0x%04X)]", name(), code);
+            return String.format("[%s(0x%04X) %s]", name(), code, getMessage());
         }
     }
 

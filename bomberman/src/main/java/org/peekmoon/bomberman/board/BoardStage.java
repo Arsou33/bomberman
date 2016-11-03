@@ -1,8 +1,5 @@
 package org.peekmoon.bomberman.board;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.glEnable;
-
 import java.net.DatagramSocket;
 
 import org.peekmoon.bomberman.Camera;
@@ -16,7 +13,7 @@ import org.peekmoon.bomberman.shader.BoardShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BoardStage implements Stage {
+public class BoardStage extends Stage {
     
     private final static Logger log = LoggerFactory.getLogger(BoardStage.class);
     
@@ -58,6 +55,12 @@ public class BoardStage implements Stage {
     }
 
     @Override
+    public Name next() {
+        return Name.BOARD;
+    }
+
+
+    @Override
     public void render() {
         shader.use();
         camera.update();
@@ -81,6 +84,12 @@ public class BoardStage implements Stage {
     @Override
     public KeyManager getKeyManager() {
         return keyManager;
+    }
+
+
+    @Override
+    protected Name getName() {
+        return Name.BOARD;
     }
 
 }
