@@ -45,7 +45,12 @@ public abstract class Command {
 
     @Override
     public String toString() {
-        return "Command [address=" + address + ", port=" + port + ", getType()=" + getType() + "]";
+        if (address == null) {
+            return "Command [getType()=" + getType() + "]";
+        } else {
+            return "Command [address=" + address + ", port=" + port + ", getType()=" + getType() + "]";
+
+        }
     }
 
 }

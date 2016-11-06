@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.board;
+package org.peekmoon.bomberman.board.renderer;
 
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
@@ -6,7 +6,7 @@ import org.peekmoon.bomberman.model.WoodItem;
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BoardShader;
 
 public class WoodItemRenderer extends ItemRenderer<WoodItem> {
 
@@ -15,7 +15,7 @@ public class WoodItemRenderer extends ItemRenderer<WoodItem> {
 
     private final Geometry geometry;
 
-    public WoodItemRenderer(ProgramShader shader) {
+    public WoodItemRenderer(BoardShader shader) {
         geometry = new Geometry(woodBoxMesh, shader);
     }
 

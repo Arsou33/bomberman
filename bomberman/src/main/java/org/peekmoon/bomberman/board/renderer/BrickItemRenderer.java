@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.board;
+package org.peekmoon.bomberman.board.renderer;
 
 import org.peekmoon.bomberman.Geometry;
 import org.peekmoon.bomberman.Mesh;
@@ -6,7 +6,7 @@ import org.peekmoon.bomberman.model.BrickItem;
 import org.peekmoon.bomberman.opengl.GLIndexedMesh;
 import org.peekmoon.bomberman.opengl.GLMesh;
 import org.peekmoon.bomberman.opengl.GLTexture;
-import org.peekmoon.bomberman.shader.ProgramShader;
+import org.peekmoon.bomberman.shader.BoardShader;
 
 public class BrickItemRenderer extends ItemRenderer<BrickItem> {
     
@@ -16,7 +16,7 @@ public class BrickItemRenderer extends ItemRenderer<BrickItem> {
     private final Geometry geometry; 
     
     
-    public BrickItemRenderer(ProgramShader shader) {
+    public BrickItemRenderer(BoardShader shader) {
         geometry = new Geometry(brickBoxMesh, shader);
     }
     

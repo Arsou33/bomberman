@@ -15,14 +15,9 @@ import org.fourthline.cling.support.model.PortMapping;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.peekmoon.bomberman.board.GameRenderer;
-import org.peekmoon.bomberman.key.KeyManager;
-import org.peekmoon.bomberman.network.CommandSender;
-import org.peekmoon.bomberman.network.StatusReceiver;
+import org.peekmoon.bomberman.Stage.Name;
 import org.peekmoon.bomberman.opengl.GLUtils;
-import org.peekmoon.bomberman.shader.FragmentShader;
-import org.peekmoon.bomberman.shader.ProgramShader;
-import org.peekmoon.bomberman.shader.VertexShader;
+import org.peekmoon.bomberman.shader.TextShader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -60,19 +55,12 @@ public class Main {
 
     private DatagramSocket socket;
 
-    private GameRenderer gameRenderer;
-    private Camera camera;
-
     private void start(String server, int port) throws IOException, URISyntaxException, InterruptedException {
         initOpenGlWindow();
 
-        ProgramShader shader = new ProgramShader(new VertexShader("shader"), new FragmentShader("shader"));
-        ProgramShader textShader = new ProgramShader(new VertexShader("text"), new FragmentShader("text"));
-
-        gameRenderer = new GameRenderer(shader);
-        FpsRenderer fpsRenderer = new FpsRenderer(textShader);
-
-        camera = new Camera(shader);
+        TextShader textShader = new TextShader();
+        TextRenderer textRenderer = new TextRenderer();
+        FpsRenderer fpsRenderer = new FpsRenderer(textRenderer);
 
         socket = new DatagramSocket(); // Bound to an ephemeral port
         
@@ -84,36 +72,29 @@ public class Main {
         UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(portMapping));
         upnpService.getControlPoint().search();     
         
-        CommandSender commandSender = new CommandSender(socket, server, port);
-        commandSender.register();
-        StatusReceiver statusReceiver = new StatusReceiver(socket);
-        statusReceiver.next();
-        Thread statusReceiverThread = new Thread(statusReceiver, "Status receiver");
-        statusReceiverThread.setDaemon(true); // TODO : clean stop
-        statusReceiverThread.start();
-        KeyManager keyManager = new KeyManager(window, commandSender, camera);
-        glfwSetKeyCallback(window, keyManager);
-
+        StageFactory stageFactory = new StageFactory(window, socket, server, port, textRenderer);
+        //Stage menuStage = new MenuStage(window, textRenderer);
+        //Stage boardStage = new BoardStage(window, socket, server, port);
+        Stage currentStage = stageFactory.get(Name.MENU);
+        currentStage.init();
+        glfwSetKeyCallback(window, currentStage.getKeyManager());
 
         while (!glfwWindowShouldClose(window)) {
 
             GLUtils.checkError();
-
             glClearColor(0.5f, 0.5f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            GLUtils.checkError();
-            shader.use();
-            camera.update();
-            GLUtils.checkError();
-
-            keyManager.update(100); // TODO : Remove elpased ??
-            GLUtils.checkError();
-
-            glEnable(GL_DEPTH_TEST);
-            gameRenderer.render(statusReceiver.getStatus());
-
-            glDisable(GL_DEPTH_TEST);
+            currentStage.getKeyManager().update(); 
+            currentStage.render();
+            Name nextStageName = currentStage.next();
+            if (!currentStage.is(nextStageName)) {
+                currentStage.release();
+                currentStage = stageFactory.get(nextStageName);
+                currentStage.init();
+                glfwSetKeyCallback(window, currentStage.getKeyManager());
+            }
+            
             textShader.use();
             fpsRenderer.render();
 
@@ -121,13 +102,12 @@ public class Main {
             glfwPollEvents();
         }
         
-        log.info("Stopping statusReceiver");
-        statusReceiver.stop();
-        statusReceiverThread.join();
-        log.info("Stopping upnpService");
+        log.info("Releasing resources...");
+        currentStage.release();
+        textRenderer.release();
+        log.info("Stopping upnpService...");
         upnpService.shutdown();
         release();
-
     }
 
     private void initOpenGlWindow() {
@@ -161,7 +141,6 @@ public class Main {
 
     private void release() {
         socket.close();
-        gameRenderer.release();
         glfwDestroyWindow(window);
         Callbacks.glfwFreeCallbacks(window);
         // TODO :release shader ?

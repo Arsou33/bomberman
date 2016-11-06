@@ -1,4 +1,4 @@
-package org.peekmoon.bomberman.shader;
+package org.peekmoon.bomberman.opengl.shader;
 
 public class FragmentShader extends Shader {
     

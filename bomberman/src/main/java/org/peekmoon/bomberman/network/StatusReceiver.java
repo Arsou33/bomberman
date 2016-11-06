@@ -25,6 +25,7 @@ public class StatusReceiver implements Runnable {
     
     public StatusReceiver(DatagramSocket socket) {
         this.socket = socket;
+        this.running = true;
     }
     
     @Override
