@@ -33,20 +33,23 @@ public class Main {
         
         log.info("Bomberman starting...");
         String server = "localhost";
-        int port = 8232;
+        int portServer = 8232;
+        Integer portLocal = null;
         for (int i=0; i<args.length; i++) {
             switch (args[i]) {
                 case "-server" :
                     if (args[i+1].startsWith("-")) throw new IllegalArgumentException("Server can't start by -");
                     server = args[++i];
                     break;
-                case "-port" :
-                    port = Integer.parseInt(args[++i]);
+                case "-portServer" :
+                    portServer = Integer.parseInt(args[++i]);
                     break;
+                case "-portLocal" :
+                    portLocal = Integer.parseInt(args[++i]);
             }
         }
         Thread.setDefaultUncaughtExceptionHandler((thread, ex)->log.error("thread " + thread.getName() + " throw exception", ex));
-        new Main().start(server, port);
+        new Main().start(server, portServer, portLocal);
         log.info("Bomberman finished...");
     }
 
@@ -55,14 +58,18 @@ public class Main {
 
     private DatagramSocket socket;
 
-    private void start(String server, int port) throws IOException, URISyntaxException, InterruptedException {
+    private void start(String server, int portServer, Integer portLocal) throws IOException, URISyntaxException, InterruptedException {
         initOpenGlWindow();
 
         TextShader textShader = new TextShader();
         TextRenderer textRenderer = new TextRenderer();
         FpsRenderer fpsRenderer = new FpsRenderer(textRenderer);
 
-        socket = new DatagramSocket(); // Bound to an ephemeral port
+        if (portLocal == null) {
+            socket = new DatagramSocket(); // Bound to an ephemeral port
+        } else {
+            socket = new DatagramSocket(portLocal);
+        }
         
         // Open ephemeral port on nat
         String localAddress = InetAddress.getLocalHost().getHostAddress();
@@ -72,7 +79,7 @@ public class Main {
         UpnpServiceImpl upnpService = new UpnpServiceImpl(new PortMappingListener(portMapping));
         upnpService.getControlPoint().search();     
         
-        StageFactory stageFactory = new StageFactory(window, socket, server, port, textRenderer);
+        StageFactory stageFactory = new StageFactory(window, socket, server, portServer, textRenderer);
         //Stage menuStage = new MenuStage(window, textRenderer);
         //Stage boardStage = new BoardStage(window, socket, server, port);
         Stage currentStage = stageFactory.get(Name.MENU);
