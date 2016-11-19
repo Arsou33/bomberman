@@ -2,17 +2,15 @@ package org.peekmoon.bomberman.network.command;
 
 import java.nio.ByteBuffer;
 
-public class RegisterCommand extends Command {
+public class EnteringLobbyCommand extends Command  {
     
-    
-    public RegisterCommand() {
+    public EnteringLobbyCommand() {
         // Nothing to do
     }
     
-    public RegisterCommand(ByteBuffer buffer) {
+    public EnteringLobbyCommand(ByteBuffer buffer) {
         // Nothing to do
     }
-
 
     @Override
     protected void fillData(ByteBuffer buffer) {
@@ -20,9 +18,7 @@ public class RegisterCommand extends Command {
 
     @Override
     public void apply(CommandListener listener) {
-        listener.register(this);
+        listener.enteringLobby(this);
     }
-    
-    
 
 }

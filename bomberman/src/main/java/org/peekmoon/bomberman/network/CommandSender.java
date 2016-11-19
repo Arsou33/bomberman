@@ -9,6 +9,9 @@ import java.nio.ByteBuffer;
 
 import org.peekmoon.bomberman.model.Direction;
 import org.peekmoon.bomberman.network.command.Command;
+import org.peekmoon.bomberman.network.command.CreateGameCommand;
+import org.peekmoon.bomberman.network.command.CreateWaitingRoomCommand;
+import org.peekmoon.bomberman.network.command.EnteringLobbyCommand;
 import org.peekmoon.bomberman.network.command.PingCommand;
 import org.peekmoon.bomberman.network.command.PlayerDropBombCommand;
 import org.peekmoon.bomberman.network.command.PlayerStartMoveCommand;
@@ -26,8 +29,6 @@ public class CommandSender {
     private final DatagramSocket socket; 
     private final ByteBuffer buffer;
     
-    private Thread heartBeatThread;
-    
     public CommandSender(DatagramSocket socket, String servername, int port) {
         try {
             this.socket = socket;
@@ -42,13 +43,22 @@ public class CommandSender {
     public void register() {
         log.debug("Trying to register on server {}:{}", server.getHostAddress(), port);
         send(new RegisterCommand());
-        heartBeatThread = new Thread(new HeartBeat(this), "heartbeat");
-        heartBeatThread.setDaemon(true);
-        heartBeatThread.start();
     }
     
     void ping() {
         send(new PingCommand());
+    }
+    
+    public void enteringLobby() {
+        send(new EnteringLobbyCommand());
+    }
+    
+    public void createWaitingRoom() {
+        send(new CreateWaitingRoomCommand());
+    }
+    
+    public void createGame() {
+        send(new CreateGameCommand());
     }
     
     public void playerStartMove(Direction direction) {

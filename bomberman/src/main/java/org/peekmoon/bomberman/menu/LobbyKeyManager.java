@@ -6,12 +6,12 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import org.peekmoon.bomberman.Stage.Name;
 import org.peekmoon.bomberman.key.KeyManager;
 
-public class MenuKeyManager extends KeyManager {
+public class LobbyKeyManager extends KeyManager {
     
     
-    public MenuKeyManager(long window, MenuStage stage) {
+    public LobbyKeyManager(long window, LobbyStage stage) {
         super(window);
-        addKeyEventAction(GLFW_KEY_ENTER, GLFW_PRESS, () -> stage.setNext(Name.BOARD));
+        addKeyEventAction(GLFW_KEY_ENTER, GLFW_PRESS, () -> stage.switchToStage(Name.BOARD));
     }
 
 }

@@ -44,11 +44,9 @@ public class Board {
 	public Board(ByteBuffer buffer) {
 		this(buffer.get(), buffer.get());
 
-		int nbTiles = buffer.getInt();
-		while (nbTiles > 0) {
+		for (int nbTiles = buffer.getInt(); nbTiles > 0; nbTiles--) {
 			Tile tile = new Tile(this, buffer);
 			tiles[tile.getI()][tile.getJ()] = tile;
-			nbTiles--;
 		}
 
 	}

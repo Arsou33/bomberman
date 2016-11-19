@@ -25,4 +25,9 @@ public class PlayerStartMoveCommand extends Command {
         return direction;
     }
 
+    @Override
+    public void apply(CommandListener listener) {
+        listener.playerStartMove(this);
+    }
+
 }

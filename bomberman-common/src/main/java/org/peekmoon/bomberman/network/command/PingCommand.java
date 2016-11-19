@@ -18,4 +18,10 @@ public class PingCommand extends Command {
         // Nothing to do
     }
 
+
+    @Override
+    public void apply(CommandListener listener) {
+        listener.ping(this);
+    }
+
 }

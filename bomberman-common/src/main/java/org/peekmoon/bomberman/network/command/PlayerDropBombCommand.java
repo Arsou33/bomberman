@@ -13,9 +13,10 @@ public class PlayerDropBombCommand extends Command {
         // Nothing to do
     }
 
+
     @Override
-    protected void fillData(ByteBuffer buffer) {
-        // Nothing to do
+    public void apply(CommandListener listener) {
+        listener.playerDropBomb(this);
     }
 
 }

@@ -4,7 +4,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+import org.peekmoon.bomberman.network.Message;
+
+public class Game extends Message {
 	
 	private final Board board;
 	private final List<Player> players;
@@ -26,7 +28,8 @@ public class Game {
 		}
 	}
 
-	public void fill(ByteBuffer buffer) {
+	@Override
+	public void fillData(ByteBuffer buffer) {
 		board.fill(buffer);
 		buffer.put((byte) players.size());
 		players.forEach(player->player.fill(buffer));
@@ -44,18 +47,5 @@ public class Game {
 		players.forEach(player->player.update());
 		board.update();
 	}
-
-	public void dropBomb(int noPlayer) {
-		players.get(noPlayer).dropBomb();
-	}
-
-	public void startMove(int noPlayer, Direction direction) {
-		players.get(noPlayer).startMove(direction);		
-	}
-
-	public void stopMove(int noPlayer, Direction direction) {
-		players.get(noPlayer).stopMove(direction);
-	}
-	
 
 }

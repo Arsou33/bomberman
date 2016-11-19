@@ -3,9 +3,8 @@ package org.peekmoon.bomberman.server;
 import java.io.IOException;
 import java.net.DatagramSocket;
 
+import org.peekmoon.bomberman.model.Lobby;
 import org.peekmoon.bomberman.network.command.Command;
-import org.peekmoon.bomberman.network.command.PingCommand;
-import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.peekmoon.bomberman.server.network.CommandReceiver;
 import org.peekmoon.bomberman.server.network.StatusSender;
 import org.slf4j.Logger;
@@ -27,34 +26,26 @@ public class MainServer {
         new Thread(receiver, "Command receiver").start();
 
         try (DatagramSocket socket = new DatagramSocket()) {
-
-            GameEngine engine = new GameEngine();
-            StatusSender statusSender = new StatusSender(engine.getStatus(), socket);
-            Clients clients = new Clients(statusSender);
+            GameRepository gameRepository = new GameRepository();
+            
+            Lobby lobby = new Lobby();
+            StatusSender statusSender = new StatusSender(socket);
+            Clients clients = new Clients(lobby, gameRepository, statusSender);
 
             long lastTick = System.currentTimeMillis();
             while (true) {
-                waitTick(lastTick);
-                lastTick = System.currentTimeMillis();
+                /// Wait next tick
+                lastTick = waitTick(lastTick);
+                
+                // Apply modifications received from clients
                 for (Command command : receiver.next()) {
-                    switch (command.getType()) {
-                    case REGISTER:
-                        clients.register((RegisterCommand) command);
-                        break;
-                    case PING:
-                        clients.apply((PingCommand)command);
-                        break;
-                    default:
-                        Client client = clients.getClient(command);
-                        if (client.isPlayer()) {
-                            engine.apply(client.getNoPlayer(), command);
-                        }
-                        break;
-                    }
+                    clients.apply(command);
                 }
-                ;
-
-                engine.update();
+                
+                // Update games state
+                gameRepository.update();
+                
+                // Send clients subscribe information
                 clients.sendStatus();
 
             }
@@ -63,7 +54,7 @@ public class MainServer {
         }
     }
 
-    private void waitTick(long lastTick) {
+    private long waitTick(long lastTick) {
         long currentTick = System.currentTimeMillis();
         long delayFromLast = lastTick - currentTick;
         if (delayFromLast > period) {
@@ -75,6 +66,7 @@ public class MainServer {
                 throw new IllegalStateException(e);
             }
         }
+        return System.currentTimeMillis();
 
     }
 

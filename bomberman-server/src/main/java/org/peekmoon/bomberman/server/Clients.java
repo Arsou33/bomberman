@@ -4,9 +4,12 @@ import java.time.Duration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+import org.peekmoon.bomberman.model.Lobby;
+import org.peekmoon.bomberman.network.Message;
+import org.peekmoon.bomberman.network.MessageType;
 import org.peekmoon.bomberman.network.command.Command;
-import org.peekmoon.bomberman.network.command.PingCommand;
 import org.peekmoon.bomberman.network.command.RegisterCommand;
 import org.peekmoon.bomberman.server.network.StatusSender;
 import org.slf4j.Logger;
@@ -16,30 +19,37 @@ public class Clients {
 
     private final static Logger log = LoggerFactory.getLogger(Clients.class);
 
+    private final Lobby lobby;
+    private final GameRepository gameRepository; 
     private final StatusSender statusSender;
+    
     private final List<Client> clients = new LinkedList<>();
     
-    private int noNextPlayer;
-    
-
-    public Clients(StatusSender statusSender) {
+    public Clients(Lobby lobby, GameRepository gameRepository, StatusSender statusSender) {
+        this.lobby = lobby;
+        this.gameRepository = gameRepository;
         this.statusSender = statusSender;
-        this.noNextPlayer = 0;
     }
 
-    public void register(RegisterCommand registerCommand) {
-        Client client = new Client(registerCommand, statusSender, noNextPlayer);
-        if (noNextPlayer!=-1) {
-            if (++noNextPlayer>1) noNextPlayer = -1;
-        } 
-        clients.add(client);
-        log.info("New client is registering : " + client);
+    public void apply(Command command) {
+        if (command.getType() == MessageType.REGISTER) {
+            register(command.getAs(RegisterCommand.class));
+        } else {
+            apply(command, getClient(command));
+        }
+    }
+
+    private void apply(Command command, Optional<Client> client) {
+        try {
+            client.ifPresent(c->command.apply(c));
+        } catch (Exception e) {
+            log.error("Client throw exception when applying command => revoking it " + client + " " + command, e);
+            if (!clients.remove(client)) {
+                log.error("Unable to remove client");
+            };
+        }
     }
     
-    public void apply(PingCommand command) {
-        getClient(command).refresh();
-    }
-
     public void sendStatus() {
         Iterator<Client> it = clients.iterator();
         while (it.hasNext()) {
@@ -52,14 +62,21 @@ public class Clients {
             }
         }
     }
-
-    public Client getClient(Command command) {
-        for (Client client : clients) {
-            if (client.hasSent(command)) return client;
-        };
-        throw new IllegalStateException("A command is received for an unknown client " + command);
+    
+    private void register(RegisterCommand registerCommand) {
+        Client client = new Client(lobby, gameRepository, statusSender, registerCommand);
+        clients.add(client);
+        log.info("New client is registering : " + client);
     }
 
+    private Optional<Client> getClient(Message message) {
+        for (Client client : clients) {
+            if (client.hasSent(message)) return Optional.of(client);
+        };
+        log.warn("A command is received for an unknown client " + message);
+        return Optional.empty();
+    }
 
+    
 
 }
